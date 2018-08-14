@@ -1,0 +1,90 @@
+[submodule "straight/repos/circadian.el"]
+	path = straight/repos/circadian.el
+	url = https://github.com/GuidoSchmidt/circadian.el.git
+[submodule "straight/repos/elpa"]
+	path = straight/repos/elpa
+	url = https://git.savannah.gnu.org/git/emacs/elpa.git
+[submodule "straight/repos/melpa"]
+	path = straight/repos/melpa
+	url = https://github.com/melpa/melpa.git
+[submodule "straight/repos/epkgs"]
+	path = straight/repos/epkgs
+	url = https://github.com/emacsmirror/epkgs.git
+[submodule "straight/repos/straight.el"]
+	path = straight/repos/straight.el
+	url = https://github.com/raxod502/straight.el.git
+[submodule "straight/repos/use-package"]
+	path = straight/repos/use-package
+	url = https://github.com/jwiegley/use-package.git
+[submodule "straight/repos/diminish.el"]
+	path = straight/repos/diminish.el
+	url = https://github.com/myrjola/diminish.el.git
+[submodule "straight/repos/no-littering"]
+	path = straight/repos/no-littering
+	url = https://github.com/emacscollective/no-littering.git
+[submodule "straight/repos/evil"]
+	path = straight/repos/evil
+	url = https://github.com/emacs-evil/evil.git
+[submodule "straight/repos/goto-chg"]
+	path = straight/repos/goto-chg
+	url = https://github.com/emacs-evil/goto-chg.git
+[submodule "straight/repos/helm"]
+	path = straight/repos/helm
+	url = https://github.com/emacs-helm/helm.git
+[submodule "straight/repos/emacs-async"]
+	path = straight/repos/emacs-async
+	url = https://github.com/jwiegley/emacs-async.git
+[submodule "straight/repos/popup-el"]
+	path = straight/repos/popup-el
+	url = https://github.com/auto-complete/popup-el.git
+[submodule "straight/repos/emacs-winum"]
+	path = straight/repos/emacs-winum
+	url = https://github.com/deb0ch/emacs-winum.git
+[submodule "straight/repos/dash.el"]
+	path = straight/repos/dash.el
+	url = https://github.com/magnars/dash.el.git
+[submodule "straight/repos/persp-mode.el"]
+	path = straight/repos/persp-mode.el
+	url = https://github.com/Bad-ptr/persp-mode.el.git
+[submodule "straight/repos/eyebrowse"]
+	path = straight/repos/eyebrowse
+	url = https://github.com/wasamasa/eyebrowse.git
+[submodule "straight/repos/spacemacs-theme"]
+	path = straight/repos/spacemacs-theme
+	url = https://github.com/nashamri/spacemacs-theme.git
+[submodule "straight/repos/spaceline"]
+	path = straight/repos/spaceline
+	url = https://github.com/TheBB/spaceline.git
+[submodule "straight/repos/powerline"]
+	path = straight/repos/powerline
+	url = https://github.com/milkypostman/powerline.git
+[submodule "straight/repos/s.el"]
+	path = straight/repos/s.el
+	url = https://github.com/magnars/s.el.git
+[submodule "straight/repos/evil-surround"]
+	path = straight/repos/evil-surround
+	url = https://github.com/emacs-evil/evil-surround.git
+[submodule "straight/repos/magit"]
+	path = straight/repos/magit
+	url = https://github.com/magit/magit.git
+[submodule "straight/repos/ghub"]
+	path = straight/repos/ghub
+	url = https://github.com/magit/ghub.git
+[submodule "straight/repos/with-editor"]
+	path = straight/repos/with-editor
+	url = https://github.com/magit/with-editor.git
+[submodule "straight/repos/magit-popup"]
+	path = straight/repos/magit-popup
+	url = https://github.com/magit/magit-popup.git
+[submodule "straight/repos/rust-mode"]
+	path = straight/repos/rust-mode
+	url = https://github.com/rust-lang/rust-mode.git
+[submodule "straight/repos/haskell-mode"]
+	path = straight/repos/haskell-mode
+	url = https://github.com/haskell/haskell-mode.git
+[submodule "straight/repos/emacs-helm-ag"]
+	path = straight/repos/emacs-helm-ag
+	url = https://github.com/syohex/emacs-helm-ag.git
+[submodule "straight/repos/general.el"]
+	path = straight/repos/general.el
+	url = https://github.com/noctuid/general.el.git

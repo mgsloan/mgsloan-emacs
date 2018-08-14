@@ -1,5 +1,4 @@
 (use-package magit
-  :ensure t
   :init
   (setq
      ;; don't put "origin-" in front of new branch names by default

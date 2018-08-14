@@ -40,36 +40,53 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 
-;; https://github.com/chrisdone/chrisdone-emacs/blob/4039957a9aeca989f69cbea2294a71f0d304b029/config/global.el#L101
-(defun set-auto-saves ()
-  "Put autosave files (ie #foo#) in one place, *not*
- scattered all over the file system!"
-  (defvar autosave-dir
-    (concat "/tmp/emacs_autosaves/" (user-login-name) "/"))
+; Clipboard functions from https://github.com/rolandwalker/simpleclip/issues/6#issuecomment-333714700
 
-  (make-directory autosave-dir t)
+; x-clip support for emacs-nox / emacs-nw
+(defun my-copy-to-xclipboard(arg)
+  (interactive "P")
+  (cond
+    ((not (use-region-p))
+      (message "Nothing to yank to X-clipboard"))
+    ((and (not (display-graphic-p))
+         (/= 0 (shell-command-on-region
+                 (region-beginning) (region-end) "xsel -i -b")))
+      (error "Is program `xsel' installed?"))
+    (t
+      (when (display-graphic-p)
+        (call-interactively 'clipboard-kill-ring-save))
+      (message "Yanked region to X-clipboard")
+      (when arg
+        (kill-region  (region-beginning) (region-end)))
+      (deactivate-mark))))
 
-  (defun auto-save-file-name-p (filename)
-    (string-match "^#.*#$" (file-name-nondirectory filename)))
+(defun my-cut-to-xclipboard()
+  (interactive)
+  (my-copy-to-xclipboard t))
 
-  (defun make-auto-save-file-name ()
-    (concat autosave-dir
-            (if buffer-file-name
-                (concat "#" (file-name-nondirectory buffer-file-name) "#")
-              (expand-file-name
-               (concat "#%" (buffer-name) "#")))))
+(defun my-paste-from-xclipboard()
+  "Uses shell command `xsel -o' to paste from x-clipboard. With
+one prefix arg, pastes from X-PRIMARY, and with two prefix args,
+pastes from X-SECONDARY."
+  (interactive)
+  (if (display-graphic-p)
+    (clipboard-yank)
+   (let*
+     ((opt (prefix-numeric-value current-prefix-arg))
+      (opt (cond
+       ((=  1 opt) "b")
+       ((=  4 opt) "p")
+       ((= 16 opt) "s"))))
+    (insert (shell-command-to-string (concat "xsel -o -" opt))))))
 
-  (defvar backup-dir (concat "/tmp/emacs_backups/" (user-login-name) "/"))
-  (setq backup-directory-alist (list (cons "." backup-dir))))
-
-(set-auto-saves)
-
+;; TODO evil has more maps than this https://github.com/noctuid/evil-guide
 (defun bkevil (keys command)
   (mapc (lambda (m) (define-key m (kbd keys) command))
         (list evil-normal-state-map
               evil-insert-state-map
               evil-motion-state-map
               evil-emacs-state-map
+	      evil-visual-state-map
               ;; evil-lisp-state-map
               )))
 
@@ -82,6 +99,18 @@
   (bkevil "<right>" 'windmove-right)
   (bkevil "<up>" 'windmove-up)
   (bkevil "<down>" 'windmove-down)
+  ;; None of the builtin clipboard stuff seems to work for me, so hack
+  ;; in some xsel invocations.
+  ;; TODO: get this to work elsewhere than visual mode
+  (evil-define-operator my-evil-yank (beg end type register yank-handler)
+    "Saves the characters in motion into the kill-ring and xclip-board."
+    :move-point nil
+    :repeat nil
+    (interactive "<R><x><y>")
+    (evil-yank beg end type register yank-handler)
+    (my-copy-to-xclipboard nil))
+  (define-key evil-visual-state-map (kbd "y") 'my-evil-yank)
+  (bkevil "M-p" 'my-paste-from-xclipboard)
   )
 
 (use-package helm
@@ -108,12 +137,19 @@
   (with-eval-after-load 'helm-files
     (dolist (keymap (list helm-find-files-map helm-read-file-map))
       (define-key keymap (kbd "C-h") 'helm-find-files-up-one-level)))
+  ;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  ;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
   :bind
   ("M-x" . 'helm-M-x)
   ("C-x C-f" . 'helm-find-files)
   ("C-z" . 'helm-mini)
+  :bind
   (:map helm-map
+	;; TODO: why doesn't this work?
 	("<tab>" . helm-execute-persistent-action)
+	;; For some reason this is needed in order to bind tab in terminal, not sure why.
+	;; https://github.com/psibi/dotfiles/blob/533c9103c68c4c8ba14aa2f867af4ae591d2ce4c/.emacs.d/init.el#L219
+	("C-i" . helm-execute-persistent-action)
 	("C-z" . helm-select-action)
   ))
 
@@ -176,15 +212,32 @@
 (use-package undo-tree
   :diminish undo-tree-mode
   :config
-  (setq undo-tree-auto-save-history t)
-  (setq undo-tree-history-directory-alist
-        `((".*" . ,(concat emacs-config-dir "/undo-history")))))
+  (setq undo-tree-auto-save-history t))
+
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1))
+
+(use-package helm-ag)
+
+;; Custom keybinding
+(use-package general
+  :after (helm-ag)
+  :config
+  (general-define-key
+    :states '(normal visual insert emacs)
+    :prefix "SPC"
+    :non-normal-prefix "M-SPC"
+    ;; TODO: quickjump or ace jump
+    ;; "SPC"
+    ;; TODO: Make this not use the "do-" variant when in low-battery use mode
+    ;; TODO: figure out why it doesn't work.
+    ;; "saP" '(helm-do-ag-project-root)
+  ))
 
 ;; (use-package ag)
 
 ;; (use-package wgrep)
-
-;; (use-package helm-ag)
 
 ;; (use-package ivy
 ;;   :diminish
@@ -192,6 +245,7 @@
 
 ;;   :bind
 ;;   ("C-z" . ivy-switch-buffer))
+
 
 ;; TODO:
 ;;
@@ -212,3 +266,9 @@
 ;; * Hippie expansion seems popular
 ;;
 ;; * helm-swoop
+;;
+;; * evil-jumper
+;;
+;; * Figure out why there are borders around the frame. -ib and -bw don't solve it
+;;
+;; * Have C-z use less space, use C-S-z for the helm switcher

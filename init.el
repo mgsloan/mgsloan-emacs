@@ -1,34 +1,36 @@
 (require 'cl)
 
-;; Package configs
-(require 'package)
-(setq package-enable-at-startup nil)
-(setq package-archives '(("org"   . "http://orgmode.org/elpa/")
-                         ("gnu"   . "http://elpa.gnu.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
-(package-initialize)
+;; Bootstrap straight.el
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-;; Bootstrap `use-package`
-(setq use-package-always-ensure t)
-(eval-when-compile
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package))
-  (require 'use-package))
-(unless (package-installed-p 'diminish)
-  (package-refresh-contents)
-  (package-install 'diminish))
-(require 'diminish)
-(require 'bind-key)
+;; Configure straight.el
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
 
-(setq emacs-config-dir (file-name-directory load-file-name))
+(use-package diminish)
+(use-package no-littering)
 
 ;; Load the different config files.
 (defvar configs
   '("global"
     "git"
+    "haskell"
     "rust")
   "Configuration files that follow the config/foo.el file path format.")
+
+(setq emacs-config-dir (file-name-directory load-file-name))
+
 (loop for name in configs
       do (load (concat emacs-config-dir
                        "config/"
