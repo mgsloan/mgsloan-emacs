@@ -18,12 +18,10 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
-(use-package diminish)
-(use-package no-littering)
-
 ;; Load the different config files.
 (defvar configs
-  '("global"
+  '("clipboard"
+    "global"
     "git"
     "haskell"
     "rust")
@@ -32,9 +30,7 @@
 (setq emacs-config-dir (file-name-directory load-file-name))
 
 (loop for name in configs
-      do (load (concat emacs-config-dir
-                       "config/"
-                       name ".el")))
+      do (load (concat emacs-config-dir name ".el")))
 
 ;; Put custom-set-variables in a different file.
 (setq custom-file "~/.emacs.d/custom.el")
