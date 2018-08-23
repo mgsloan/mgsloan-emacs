@@ -147,11 +147,6 @@
   ("M-9" . 'winum-select-window-9)
   )
 
-(use-package persp-mode
-  :diminish persp-mode
-  :config
-  (persp-mode 1))
-
 (use-package eyebrowse
   :diminish eyebrowse-mode
   :config
@@ -171,13 +166,12 @@
   (circadian-setup))
 
 (use-package spaceline
-  :after (winum persp-mode eyebrowse)
+  :after (winum eyebrowse)
   :init
   (require 'spaceline-config)
   (setq powerline-default-separator 'utf-8)
   :config
-  (spaceline-spacemacs-theme)
-  (spaceline-helm-mode)
+  (spaceline-emacs-theme)
   (spaceline-toggle-major-mode-off)
   (spaceline-toggle-buffer-position-off)
   (spaceline-toggle-buffer-encoding-abbrev-off)
@@ -262,3 +256,5 @@
 ;;
 ;; * Now that C-z is using helm, most-recent-helm isn't as useful.
 ;;   "Most recent ag helm" is what I want.
+;;
+;; * persp-mode
