@@ -39,6 +39,9 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 
+;; Enable mouse use in terminal
+(xterm-mouse-mode 1)
+
 (defun kill-other-buffers ()
     "Kill all other buffers."
     (interactive)
