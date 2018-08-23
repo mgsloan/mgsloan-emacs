@@ -135,6 +135,8 @@ Point does not move."
   :config
   (setq git-link-use-commit t))
 
+(use-package smeargle)
+
 ;; TODO:
 ;;
 ;; * git timemachine

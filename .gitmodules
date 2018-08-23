@@ -124,3 +124,6 @@
 [submodule "straight/repos/undo-tree"]
 	path = straight/repos/undo-tree
 	url = https://github.com/emacsmirror/undo-tree.git
+[submodule "straight/repos/emacs-smeargle"]
+	path = straight/repos/emacs-smeargle
+	url = https://github.com/syohex/emacs-smeargle.git
