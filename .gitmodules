@@ -88,3 +88,39 @@
 [submodule "straight/repos/general.el"]
 	path = straight/repos/general.el
 	url = https://github.com/noctuid/general.el.git
+[submodule "straight/repos/ag.el"]
+	path = straight/repos/ag.el
+	url = https://github.com/Wilfred/ag.el.git
+[submodule "straight/repos/Emacs-wgrep"]
+	path = straight/repos/Emacs-wgrep
+	url = https://github.com/mhayashi1120/Emacs-wgrep.git
+[submodule "straight/repos/company-mode"]
+	path = straight/repos/company-mode
+	url = https://github.com/company-mode/company-mode.git
+[submodule "straight/repos/flycheck"]
+	path = straight/repos/flycheck
+	url = https://github.com/flycheck/flycheck.git
+[submodule "straight/repos/pkg-info.el"]
+	path = straight/repos/pkg-info.el
+	url = https://github.com/lunaryorn/pkg-info.el.git
+[submodule "straight/repos/epl"]
+	path = straight/repos/epl
+	url = https://github.com/cask/epl.git
+[submodule "straight/repos/git-link"]
+	path = straight/repos/git-link
+	url = https://github.com/sshaw/git-link.git
+[submodule "straight/repos/emacs-racer"]
+	path = straight/repos/emacs-racer
+	url = https://github.com/racer-rust/emacs-racer.git
+[submodule "straight/repos/f.el"]
+	path = straight/repos/f.el
+	url = https://github.com/rejeep/f.el.git
+[submodule "straight/repos/pos-tip"]
+	path = straight/repos/pos-tip
+	url = https://github.com/pitkali/pos-tip.git
+[submodule "straight/repos/flycheck-rust"]
+	path = straight/repos/flycheck-rust
+	url = https://github.com/flycheck/flycheck-rust.git
+[submodule "straight/repos/undo-tree"]
+	path = straight/repos/undo-tree
+	url = https://github.com/emacsmirror/undo-tree.git

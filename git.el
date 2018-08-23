@@ -13,7 +13,8 @@
      magit-process-popup-time 10
      ;; ask me if I want a tracking upstream
      magit-set-upstream-on-push 'askifnotset)
-  )
+  :config
+  (add-hook 'git-commit-mode-hook 'evil-insert-state))
 
 ;; major mode for editing `git rebase -i` files
 ;; (use-package rebase-mode)
@@ -129,6 +130,10 @@ Point does not move."
                   (magit-section-goto hunk)
                   (recenter 0))
               (recenter))))))))
+
+(use-package git-link
+  :config
+  (setq git-link-use-commit t))
 
 ;; TODO:
 ;;

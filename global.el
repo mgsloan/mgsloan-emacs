@@ -39,6 +39,19 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 
+(defun kill-other-buffers ()
+    "Kill all other buffers."
+    (interactive)
+    (mapc 'kill-buffer
+          (delq (current-buffer)
+                (remove-if-not 'buffer-file-name (buffer-list)))))
+
+(defun unfill-paragraph ()
+  "Takes a multi-line paragraph and makes it into a single line of text."
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-paragraph nil)))
+
 ;; TODO evil has more maps than this https://github.com/noctuid/evil-guide
 (defun bkevil (keys command)
   (mapc (lambda (m) (define-key m (kbd keys) command))
@@ -105,7 +118,6 @@
   ("C-z" . 'helm-mini)
   :bind
   (:map helm-map
-	;; TODO: why doesn't this work?
 	("<tab>" . helm-execute-persistent-action)
 	;; For some reason this is needed in order to bind tab in terminal, not sure why.
 	;; https://github.com/psibi/dotfiles/blob/533c9103c68c4c8ba14aa2f867af4ae591d2ce4c/.emacs.d/init.el#L219
@@ -178,7 +190,13 @@
   :config
   (global-evil-surround-mode 1))
 
-(use-package helm-ag)
+(use-package helm-ag
+  :config
+  ;; Initialize search with the symbol at the point.
+  ;;
+  ;; TODO: Have a keybinding variant that does not use the symbol at
+  ;; point.
+  (setq helm-ag-insert-at-point 'symbol))
 
 ;; Custom keybinding
 (use-package general
@@ -191,13 +209,19 @@
     ;; TODO: quickjump or ace jump
     ;; "SPC"
     ;; TODO: Make this not use the "do-" variant when in low-battery use mode
-    ;; TODO: figure out why it doesn't work.
-    ;; "saP" '(helm-do-ag-project-root)
+    "saP" 'helm-do-ag-project-root
+    ;; TODO: pick a better keybinding.  If you miss the space, this
+    ;; replaces a char with l.
+    "rl" 'helm-resume
   ))
 
-;; (use-package ag)
+(use-package ag)
 
-;; (use-package wgrep)
+(use-package wgrep-ag)
+
+(use-package company)
+
+(use-package flycheck)
 
 ;; (use-package ivy
 ;;   :diminish
@@ -232,3 +256,6 @@
 ;; * Figure out why there are borders around the frame. -ib and -bw don't solve it
 ;;
 ;; * Have C-z use less space, use C-S-z for the helm switcher
+;;
+;; * Now that C-z is using helm, most-recent-helm isn't as useful.
+;;   "Most recent ag helm" is what I want.

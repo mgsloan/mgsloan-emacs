@@ -24,7 +24,9 @@
     "global"
     "git"
     "haskell"
-    "rust")
+    "rust"
+    "javascript"
+    "straight-submodules")
   "Configuration files that follow the config/foo.el file path format.")
 
 (setq emacs-config-dir (file-name-directory load-file-name))
