@@ -144,3 +144,5 @@ Point does not move."
 ;; * keybinding for status-here?
 ;;
 ;; * Consider some more magit settings from https://github.com/bradwright/emacs-d/blob/master/packages/init-magit.el
+;;
+;; * magithub?
