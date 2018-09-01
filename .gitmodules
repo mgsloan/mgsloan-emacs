@@ -127,3 +127,15 @@
 [submodule "straight/repos/emacs-smeargle"]
 	path = straight/repos/emacs-smeargle
 	url = https://github.com/syohex/emacs-smeargle.git
+[submodule "straight/repos/counsel-projectile"]
+	path = straight/repos/counsel-projectile
+	url = https://github.com/ericdanan/counsel-projectile.git
+[submodule "straight/repos/projectile"]
+	path = straight/repos/projectile
+	url = https://github.com/bbatsov/projectile.git
+[submodule "straight/repos/rainbow-delimiters"]
+	path = straight/repos/rainbow-delimiters
+	url = https://github.com/Fanael/rainbow-delimiters.git
+[submodule "straight/repos/swiper"]
+	path = straight/repos/swiper
+	url = https://github.com/abo-abo/swiper.git

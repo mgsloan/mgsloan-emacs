@@ -42,6 +42,12 @@
 ;; Enable mouse use in terminal
 (xterm-mouse-mode 1)
 
+;; Disable emacs backup files (surrounded by hashes)
+(setq make-backup-files nil)
+
+;; Spaces are better than tabs.
+(setq-default indent-tabs-mode nil)
+
 (defun kill-other-buffers ()
     "Kill all other buffers."
     (interactive)
@@ -87,46 +93,13 @@
     (my-copy-to-xclipboard nil))
   (define-key evil-visual-state-map (kbd "y") 'my-evil-yank)
   (bkevil "M-p" 'my-paste-from-xclipboard)
-  )
 
-(use-package helm
-  :diminish helm-mode
-  :defer t
-  :init
-  (setq helm-M-x-fuzzy-match t
-  helm-mode-fuzzy-match t
-  helm-buffers-fuzzy-matching t
-  helm-recentf-fuzzy-match t
-  helm-locate-fuzzy-match t
-  helm-semantic-fuzzy-match t
-  helm-imenu-fuzzy-match t
-  helm-completion-in-region-fuzzy-match t
-  helm-candidate-number-list 150
-  helm-split-window-in-side-p t
-  helm-move-to-line-cycle-in-source t
-  helm-echo-input-in-header-line t
-  helm-autoresize-max-height 0
-  helm-autoresize-min-height 20)
-  :config
-  (helm-mode 1)
-  ;; In file find mode, use C-h for removing a dir name.
-  (with-eval-after-load 'helm-files
-    (dolist (keymap (list helm-find-files-map helm-read-file-map))
-      (define-key keymap (kbd "C-h") 'helm-find-files-up-one-level)))
-  ;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-  ;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-  :bind
-  ("M-x" . 'helm-M-x)
-  ("C-x C-f" . 'helm-find-files)
-  ("C-z" . 'helm-mini)
-  :bind
-  (:map helm-map
-	("<tab>" . helm-execute-persistent-action)
-	;; For some reason this is needed in order to bind tab in terminal, not sure why.
-	;; https://github.com/psibi/dotfiles/blob/533c9103c68c4c8ba14aa2f867af4ae591d2ce4c/.emacs.d/init.el#L219
-	("C-i" . helm-execute-persistent-action)
-	("C-z" . helm-select-action)
-  ))
+  ;; Make word / search include underscores in symbols.
+  ;; (modify-syntax-entry ?_ "w")
+
+  ;; TODO: figure out how to do this for * and # without modifying
+  ;; other motions.
+  )
 
 (use-package winum
   :diminish winmum-mode
@@ -183,21 +156,13 @@
   :config
   (setq undo-tree-auto-save-history t))
 
+;; TODO: get in the habit of using
 (use-package evil-surround
   :config
   (global-evil-surround-mode 1))
 
-(use-package helm-ag
-  :config
-  ;; Initialize search with the symbol at the point.
-  ;;
-  ;; TODO: Have a keybinding variant that does not use the symbol at
-  ;; point.
-  (setq helm-ag-insert-at-point 'symbol))
-
 ;; Custom keybinding
 (use-package general
-  :after (helm-ag)
   :config
   (general-define-key
     :states '(normal visual insert emacs)
@@ -206,10 +171,15 @@
     ;; TODO: quickjump or ace jump
     ;; "SPC"
     ;; TODO: Make this not use the "do-" variant when in low-battery use mode
-    "saP" 'helm-do-ag-project-root
+
+    "saP" 'counsel-projectile-rg
+
     ;; TODO: pick a better keybinding.  If you miss the space, this
     ;; replaces a char with l.
-    "rl" 'helm-resume
+
+    "rl" 'ivy-resume
+
+    "gs" 'magit-status
   ))
 
 (use-package ag)
@@ -220,13 +190,145 @@
 
 (use-package flycheck)
 
-;; (use-package ivy
-;;   :diminish
-;;   :demand t
+;; Copied and slightly modified from
+;; https://github.com/jwiegley/dot-emacs/blob/e4b5661f72d774fbeeaca6bf900f4cacbba2ba6e/init.el#L2295
+(use-package ivy
+  :diminish
+  :demand t
 
-;;   :bind
-;;   ("C-z" . ivy-switch-buffer))
+  :bind ("C-z" . ivy-switch-buffer)
+        ("C-S-z" . ivy-switch-buffer-other-window)
 
+  :bind (:map ivy-minibuffer-map
+              ("<tab>" . ivy-alt-done)
+              ("C-d"   . ivy-done-or-delete-char)
+              ("C-i"   . ivy-partial-or-done)
+              ("M-r"   . ivy-reverse-i-search)
+	      ("C-h"   . counsel-up-directory)
+	      ("C-j"   . ivy-next-line)
+	      ("C-k"   . ivy-previous-line-or-history)
+	      ("C-l"   . ivy-alt-done))
+
+  :bind (:map ivy-switch-buffer-map
+              ("C-k" . ivy-switch-buffer-kill))
+
+  :custom
+  ;; (ivy-dynamic-exhibit-delay-ms 100)
+  (ivy-height 10)
+  (ivy-initial-inputs-alist nil t)
+  (ivy-magic-tilde nil)
+  (ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+  (ivy-use-virtual-buffers t)
+  (ivy-wrap t)
+  (ivy-on-del-error-function #'ignore)
+
+  :preface
+  (defun ivy-done-or-delete-char ()
+    (interactive)
+    (call-interactively
+     (if (eolp)
+         #'ivy-immediate-done
+       #'ivy-delete-char)))
+
+  (defun ivy-switch-buffer-kill ()
+    (interactive)
+    (debug)
+    (let ((bn (ivy-state-current ivy-last)))
+      (when (get-buffer bn)
+        (kill-buffer bn))
+      (unless (buffer-live-p (ivy-state-buffer ivy-last))
+        (setf (ivy-state-buffer ivy-last)
+              (with-ivy-window (current-buffer))))
+      (setq ivy--all-candidates (delete bn ivy--all-candidates))
+      (ivy--exhibit)))
+
+  ;; This is the value of `magit-completing-read-function', so that we see
+  ;; Magit's own sorting choices.
+  (defun my-ivy-completing-read (&rest args)
+    (let ((ivy-sort-functions-alist '((t . nil))))
+      (apply 'ivy-completing-read args)))
+
+  ;; https://github.com/abo-abo/swiper/issues/1068#issuecomment-318124861
+  ;; FIXME: use
+  (defun ivy-with-thing-at-point (cmd)
+  (let ((ivy-initial-inputs-alist
+         (list
+          (cons cmd (thing-at-point 'symbol)))))
+    (funcall cmd)))
+
+  :config
+  (ivy-mode 1)
+  (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur))
+
+
+(use-package counsel
+  :after ivy
+  :demand t
+  :diminish
+  :custom (counsel-find-file-ignore-regexp
+           (concat "\\(\\`\\.[^.]\\|"
+                   (regexp-opt completion-ignored-extensions)
+                   "\\'\\)"))
+
+  :bind (("M-x" . counsel-M-x))
+
+  ;; from johnw's config
+  ;; :bind (("C-*"     . counsel-org-agenda-headlines)
+  ;;        ("C-x C-f" . counsel-find-file)
+  ;;        ("C-c e l" . counsel-find-library)
+  ;;        ("C-c e q" . counsel-set-variable)
+  ;;        ("C-h e l" . counsel-find-library)
+  ;;        ("C-h e u" . counsel-unicode-char)
+  ;;        ("C-h f"   . counsel-describe-function)
+  ;;        ("C-x r b" . counsel-bookmark)
+  ;;        ;; ("M-y"     . counsel-yank-pop)
+
+  ;;        ("M-s f" . counsel-file-jump)
+  ;;        ;; ("M-s g" . counsel-rg)
+  ;;        ("M-s j" . counsel-dired-jump))
+
+  :commands counsel-minibuffer-history
+  :init
+  (bind-key "M-r" #'counsel-minibuffer-history minibuffer-local-map)
+  :config
+  (add-to-list 'ivy-sort-matches-functions-alist
+               '(counsel-find-file . ivy--sort-files-by-date)))
+
+(use-package counsel-projectile
+  :after (counsel projectile)
+  :config
+  (counsel-projectile-mode))
+
+(use-package projectile
+  ;; TODO(mgsloan): Why is it defer 5?
+  :defer 5
+  :diminish
+  :bind* ("C-c TAB" . projectile-find-other-file)
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :config
+  (projectile-global-mode)
+
+  ;; TODO(mgsloan): Figure out what this is all about (from johnw's
+  ;; config)
+
+  (defun my-projectile-invalidate-cache (&rest _args)
+    ;; We ignore the args to `magit-checkout'.
+    (projectile-invalidate-cache nil))
+
+  (eval-after-load 'magit-branch
+    '(progn
+       (advice-add 'magit-checkout
+                   :after #'my-projectile-invalidate-cache)
+       (advice-add 'magit-branch-and-checkout
+                   :after #'my-projectile-invalidate-cache))))
+
+;; TODO: better keybinding
+;; (use-package crosshairs
+;;   :init
+;;   (bkevil "C-f" 'flash-crosshairs))
+
+
+(use-package rainbow-delimiters)
 
 ;; TODO:
 ;;
@@ -246,15 +348,20 @@
 ;;
 ;; * Hippie expansion seems popular
 ;;
-;; * helm-swoop
-;;
 ;; * evil-jumper
 ;;
 ;; * Figure out why there are borders around the frame. -ib and -bw don't solve it
 ;;
-;; * Have C-z use less space, use C-S-z for the helm switcher
+;; * Figure out why ivy-rich doesn't work for me
 ;;
-;; * Now that C-z is using helm, most-recent-helm isn't as useful.
-;;   "Most recent ag helm" is what I want.
+;; * multiple cursors mode
 ;;
 ;; * persp-mode
+;;
+;; * swiper
+;;
+;; * "ivy-avy" command.  Good reason to use it instead of quickjump?
+;;
+;; * Revisit https://github.com/emacs-evil/evil/blob/master/evil-maps.el
+;;
+;; * Projectile search that opens result in other buffer
