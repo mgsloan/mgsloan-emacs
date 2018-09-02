@@ -139,3 +139,9 @@
 [submodule "straight/repos/swiper"]
 	path = straight/repos/swiper
 	url = https://github.com/abo-abo/swiper.git
+[submodule "straight/repos/markdown-mode"]
+	path = straight/repos/markdown-mode
+	url = https://github.com/jrblevin/markdown-mode.git
+[submodule "straight/repos/mmm-mode"]
+	path = straight/repos/mmm-mode
+	url = https://github.com/purcell/mmm-mode

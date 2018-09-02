@@ -365,3 +365,5 @@
 ;; * Revisit https://github.com/emacs-evil/evil/blob/master/evil-maps.el
 ;;
 ;; * Projectile search that opens result in other buffer
+;;
+;; * copy-as-format
