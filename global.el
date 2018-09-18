@@ -190,6 +190,7 @@
     ;; TODO: Make this not use the "do-" variant when in low-battery use mode
 
     "saP" 'counsel-projectile-rg
+    "sf" 'counsel-projectile-find-file
 
     ;; TODO: pick a better keybinding.  If you miss the space, this
     ;; replaces a char with l.
