@@ -351,6 +351,8 @@
 
 (use-package rainbow-delimiters)
 
+(use-package unfill)
+
 ;; TODO:
 ;;
 ;; * Use which key? May not be needed.

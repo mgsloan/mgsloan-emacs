@@ -145,3 +145,6 @@
 [submodule "straight/repos/mmm-mode"]
 	path = straight/repos/mmm-mode
 	url = https://github.com/purcell/mmm-mode
+[submodule "straight/repos/unfill"]
+	path = straight/repos/unfill
+	url = https://github.com/purcell/unfill.git
