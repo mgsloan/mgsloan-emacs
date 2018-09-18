@@ -42,8 +42,9 @@
 ;; Enable mouse use in terminal
 (xterm-mouse-mode 1)
 
-;; Disable emacs backup files (surrounded by hashes)
+;; Disable emacs backup and autosave files (surrounded by hashes)
 (setq make-backup-files nil)
+(setq auto-save-default nil)
 
 ;; Spaces are better than tabs.
 (setq-default indent-tabs-mode nil)
