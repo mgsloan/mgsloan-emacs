@@ -62,6 +62,22 @@
   (let ((fill-column (point-max)))
     (fill-paragraph nil)))
 
+(defun px-query-replace-in-open-buffers (arg1 arg2)
+  "query-replace in all open files"
+  (interactive "sRegexp:\nsReplace with:")
+  (mapcar
+   (lambda (x)
+     (find-file x)
+     (save-excursion
+       (goto-char (point-min))
+       (query-replace-regexp arg1 arg2)))
+   (delq
+    nil
+    (mapcar
+     (lambda (x)
+       (buffer-file-name x))
+     (buffer-list)))))
+
 ;; TODO evil has more maps than this https://github.com/noctuid/evil-guide
 (defun bkevil (keys command)
   (mapc (lambda (m) (define-key m (kbd keys) command))
