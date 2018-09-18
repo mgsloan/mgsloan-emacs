@@ -149,8 +149,8 @@
   :config
   (setq
     calendar-location-name "WA"
-    calendar-latitude 47.75
-    calendar-longitude -120.74)
+    calendar-latitude 47
+    calendar-longitude -120)
   (setq circadian-themes '((:sunrise . spacemacs-light)
                            (:sunset . spacemacs-dark)))
   (circadian-setup))
