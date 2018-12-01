@@ -353,6 +353,23 @@
 
 (use-package unfill)
 
+;; TODO: This seems to need package.el.  Instead using a custom function.
+;; (use-package centered-window :ensure t)
+;;
+;; TODO: Would be nice to have auto-re-center
+;;
+;; From https://stackoverflow.com/a/24957203
+(defun my/center (width)
+  (interactive "nBuffer width: ")
+  (let* ((adj          (- (window-text-width)
+                          width))
+         (total-margin (+ adj
+                          left-margin-width
+                          right-margin-width)))
+    (setq left-margin-width  (/ total-margin 2))
+    (setq right-margin-width (- total-margin left-margin-width)))
+  (set-window-buffer (selected-window) (current-buffer)))
+
 ;; TODO:
 ;;
 ;; * Use which key? May not be needed.
