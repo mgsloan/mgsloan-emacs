@@ -148,3 +148,9 @@
 [submodule "straight/repos/unfill"]
 	path = straight/repos/unfill
 	url = https://github.com/purcell/unfill.git
+[submodule "straight/repos/graphql.el"]
+	path = straight/repos/graphql.el
+	url = https://github.com/vermiculus/graphql.el.git
+[submodule "straight/repos/treepy.el"]
+	path = straight/repos/treepy.el
+	url = https://github.com/volrath/treepy.el.git
