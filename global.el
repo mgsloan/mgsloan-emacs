@@ -1,6 +1,8 @@
 (use-package diminish)
 (use-package no-littering)
 
+(set-frame-font "Hack 9" nil t)
+
 ;; Newline at end of file, trim trailing whitespace
 (setq require-final-newline t)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
