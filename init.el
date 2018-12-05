@@ -18,7 +18,12 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
-;; Load the different config files.
+;; Different library files to load.
+(defvar libs
+  '("quickjump")
+  "Configuration files that follow the lib/foo.el file path format.")
+
+;; Different config files to load.
 (defvar configs
   '("clipboard"
     "global"
@@ -27,9 +32,13 @@
     "rust"
     "javascript"
     "markdown")
-  "Configuration files that follow the config/foo.el file path format.")
+  "Configuration files that follow the ./foo.el file path format.")
 
 (setq emacs-config-dir (file-name-directory load-file-name))
+(setq emacs-lib-dir (concat emacs-config-dir "lib/"))
+
+(loop for name in libs
+      do (load (concat emacs-lib-dir name ".el")))
 
 (loop for name in configs
       do (load (concat emacs-config-dir name ".el")))

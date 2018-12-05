@@ -112,6 +112,8 @@
     (my-copy-to-xclipboard nil))
   (define-key evil-visual-state-map (kbd "y") 'my-evil-yank)
   (bkevil "M-p" 'my-paste-from-xclipboard)
+  (define-key evil-normal-state-map (kbd "RET") 'quickjump)
+  (define-key evil-visual-state-map (kbd "RET") 'quickjump)
 
   ;; Make word / search include underscores in symbols.
   ;; (modify-syntax-entry ?_ "w")
@@ -189,8 +191,6 @@
     :states '(normal visual insert emacs)
     :prefix "SPC"
     :non-normal-prefix "M-SPC"
-    ;; TODO: quickjump or ace jump
-    ;; "SPC"
     ;; TODO: Make this not use the "do-" variant when in low-battery use mode
 
     "saP" 'counsel-projectile-rg
