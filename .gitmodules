@@ -157,3 +157,6 @@
 [submodule "straight/repos/keyfreq"]
 	path = straight/repos/keyfreq
 	url = https://github.com/dacap/keyfreq.git
+[submodule "straight/repos/command-log-mode"]
+	path = straight/repos/command-log-mode
+	url = https://github.com/lewang/command-log-mode.git

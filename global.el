@@ -180,6 +180,8 @@
   :config
   (global-evil-surround-mode 1))
 
+(use-package command-log-mode)
+
 ;; Custom keybinding
 (use-package general
   :config
