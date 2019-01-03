@@ -16,6 +16,12 @@
   :config
   (add-hook 'git-commit-mode-hook 'evil-insert-state))
 
+(use-package evil-magit
+  :after (magit evil)
+  :config
+  ;; Use evil keybindings for all of magit except for magit-status
+  (push '("magit:.*" . emacs) evil-buffer-regexps))
+
 ;; major mode for editing `git rebase -i` files
 ;; (use-package rebase-mode)
 
