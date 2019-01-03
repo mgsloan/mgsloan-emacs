@@ -206,6 +206,7 @@
     "rl" 'helm-resume
 
     "gs" 'magit-status
+    "gh" 'magit-status-here
     "gl" 'git-link
     "gc" 'git-link-commit
   ))
