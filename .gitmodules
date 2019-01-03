@@ -160,3 +160,24 @@
 [submodule "straight/repos/command-log-mode"]
 	path = straight/repos/command-log-mode
 	url = https://github.com/lewang/command-log-mode.git
+[submodule "straight/repos/evil-magit"]
+	path = straight/repos/evil-magit
+	url = https://github.com/emacs-evil/evil-magit.git
+[submodule "straight/repos/evil-mc"]
+	path = straight/repos/evil-mc
+	url = https://github.com/gabesoft/evil-mc.git
+[submodule "straight/repos/frame-cmds"]
+	path = straight/repos/frame-cmds
+	url = https://github.com/emacsmirror/frame-cmds.git
+[submodule "straight/repos/frame-fns"]
+	path = straight/repos/frame-fns
+	url = https://github.com/emacsmirror/frame-fns.git
+[submodule "straight/repos/helm-projectile"]
+	path = straight/repos/helm-projectile
+	url = https://github.com/bbatsov/helm-projectile.git
+[submodule "straight/repos/helm-rg"]
+	path = straight/repos/helm-rg
+	url = https://github.com/cosmicexplorer/helm-rg.git
+[submodule "straight/repos/zoom-frm"]
+	path = straight/repos/zoom-frm
+	url = https://github.com/emacsmirror/zoom-frm.git
