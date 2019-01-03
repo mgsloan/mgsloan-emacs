@@ -361,6 +361,13 @@
 
 (use-package unfill)
 
+(use-package zoom-frm
+  :commands zoom-frm-in zoom-frm-out zoom-frm-unzoom
+  :bind
+  (("C-x C--" . zoom-frm-out)
+   ("C-x C-=" . zoom-frm-in)
+   ("C-x C-0" . zoom-frm-unzoom)))
+
 ;; TODO: This seems to need package.el.  Instead using a custom function.
 ;; (use-package centered-window :ensure t)
 ;;
