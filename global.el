@@ -123,6 +123,9 @@
   ;; other motions.
   )
 
+(use-package evil-mc
+  :after evil)
+
 (use-package winum
   :diminish winmum-mode
   :init
@@ -428,3 +431,8 @@
 ;; * Projectile search that opens result in other buffer
 ;;
 ;; * copy-as-format
+;;
+;; * Prevent numeric prefix of insertion, similar vim commands from
+;;   replicating affect.
+;;
+;; * habit of using evil-mc
