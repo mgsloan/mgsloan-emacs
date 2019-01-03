@@ -208,7 +208,6 @@
     "gs" 'magit-status
     "gl" 'git-link
     "gc" 'git-link-commit
-    "gb" 'git-link-branch
   ))
 
 (use-package helm-projectile)
