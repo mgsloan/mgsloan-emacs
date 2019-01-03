@@ -100,6 +100,7 @@
   (bkevil "<right>" 'windmove-right)
   (bkevil "<up>" 'windmove-up)
   (bkevil "<down>" 'windmove-down)
+  (bkevil "<backspace>" 'evil-delete-backward-char-and-join)
   ;; None of the builtin clipboard stuff seems to work for me, so hack
   ;; in some xsel invocations.
   ;; TODO: get this to work elsewhere than visual mode
