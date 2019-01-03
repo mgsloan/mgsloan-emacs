@@ -197,19 +197,62 @@
     :non-normal-prefix "M-SPC"
     ;; TODO: Make this not use the "do-" variant when in low-battery use mode
 
-    "saP" 'counsel-projectile-rg
-    "sf" 'counsel-projectile-find-file
+    "saP" 'helm-projectile-rg
+    "sf" 'helm-projectile-find-file
 
     ;; TODO: pick a better keybinding.  If you miss the space, this
     ;; replaces a char with l.
 
-    "rl" 'ivy-resume
+    "rl" 'helm-resume
 
     "gs" 'magit-status
     "gl" 'git-link
     "gc" 'git-link-commit
     "gb" 'git-link-branch
   ))
+
+(use-package helm-projectile)
+(use-package helm-rg)
+
+(use-package helm
+  :diminish helm-mode
+  :defer t
+  :init
+  (setq helm-M-x-fuzzy-match t
+  helm-mode-fuzzy-match t
+  helm-buffers-fuzzy-matching t
+  helm-recentf-fuzzy-match t
+  helm-locate-fuzzy-match t
+  helm-semantic-fuzzy-match t
+  helm-imenu-fuzzy-match t
+  helm-completion-in-region-fuzzy-match t
+  helm-candidate-number-list 150
+  helm-split-window-in-side-p t
+  helm-move-to-line-cycle-in-source t
+  helm-echo-input-in-header-line t
+  helm-autoresize-max-height 0
+  helm-autoresize-min-height 20)
+  :config
+  (helm-mode 1)
+  ;; In file find mode, use C-h for removing a dir name.
+  (with-eval-after-load 'helm-files
+    (dolist (keymap (list helm-find-files-map helm-read-file-map))
+      (define-key keymap (kbd "C-h") 'helm-find-files-up-one-level)))
+  ;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  ;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+  :bind
+  ("M-x" . 'helm-M-x)
+  ;; ("C-x C-f" . 'helm-find-files)
+  ;; ("C-z" . 'helm-mini)
+  :bind
+  (:map helm-map
+	("<tab>" . helm-execute-persistent-action)
+	;; For some reason this is needed in order to bind tab in terminal, not sure why.
+	;; https://github.com/psibi/dotfiles/blob/533c9103c68c4c8ba14aa2f867af4ae591d2ce4c/.emacs.d/init.el#L219
+	("C-i" . helm-execute-persistent-action)
+	("C-z" . helm-select-action)
+  ))
+
 
 (use-package ag)
 
