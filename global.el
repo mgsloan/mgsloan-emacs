@@ -356,7 +356,6 @@
 ;;   :init
 ;;   (bkevil "C-f" 'flash-crosshairs))
 
-
 (use-package rainbow-delimiters)
 
 (use-package unfill)
@@ -385,21 +384,24 @@
     (setq right-margin-width (- total-margin left-margin-width)))
   (set-window-buffer (selected-window) (current-buffer)))
 
-(use-package keyfreq
-  :config
-  ;; Omit some things that get spammed
-  (setq keyfreq-excluded-commands
-        '(self-insert-command
-          mwheel-scroll
-          mouse-drag-region
-          mouse-set-point
-          ivy-done
-          evil-backward-paragraph
-          evil-forward-paragraph
-          evil-next-line
-          evil-previous-line))
-  (keyfreq-mode 1)
-  (keyfreq-autosave-mode 1))
+;; Doesn't work well with multiple frames + non ideal efficiency
+;;
+;; (use-package keyfreq
+;;   :config
+;;   ;; Omit some things that get spammed
+;;   (setq keyfreq-excluded-commands
+;;         '(self-insert-command
+;;           mwheel-scroll
+;;           mouse-drag-region
+;;           mouse-set-point
+;;           ivy-done
+;;           evil-backward-paragraph
+;;           evil-forward-paragraph
+;;           evil-next-line
+;;           evil-previous-line))
+;;   (keyfreq-mode 1)
+;;   (keyfreq-autosave-mode 1))
+
 
 ;; TODO:
 ;;
