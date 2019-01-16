@@ -177,7 +177,7 @@
 	url = https://github.com/bbatsov/helm-projectile.git
 [submodule "straight/repos/helm-rg"]
 	path = straight/repos/helm-rg
-	url = https://github.com/cosmicexplorer/helm-rg.git
+	url = https://github.com/tohammer/helm-rg.git
 [submodule "straight/repos/zoom-frm"]
 	path = straight/repos/zoom-frm
 	url = https://github.com/emacsmirror/zoom-frm.git
