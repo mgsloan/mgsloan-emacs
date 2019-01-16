@@ -51,6 +51,8 @@
 ;; Spaces are better than tabs.
 (setq-default indent-tabs-mode nil)
 
+(add-to-list 'auto-mode-alist '("dunstrc" . conf-unix-mode))
+
 (defun kill-other-buffers ()
     "Kill all other buffers."
     (interactive)
