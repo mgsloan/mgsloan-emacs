@@ -52,6 +52,7 @@
 (setq-default indent-tabs-mode nil)
 
 (add-to-list 'auto-mode-alist '("dunstrc" . conf-unix-mode))
+(add-to-list 'auto-mode-alist '("local.bashrc" . sh-mode))
 
 (defun kill-other-buffers ()
     "Kill all other buffers."
