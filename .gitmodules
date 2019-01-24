@@ -181,3 +181,6 @@
 [submodule "straight/repos/zoom-frm"]
 	path = straight/repos/zoom-frm
 	url = https://github.com/emacsmirror/zoom-frm.git
+[submodule "straight/repos/avy"]
+	path = straight/repos/avy
+	url = https://github.com/abo-abo/avy.git

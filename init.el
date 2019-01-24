@@ -20,7 +20,7 @@
 
 ;; Different library files to load.
 (defvar libs
-  '("quickjump")
+  '()
   "Configuration files that follow the lib/foo.el file path format.")
 
 ;; Different config files to load.

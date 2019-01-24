@@ -94,6 +94,10 @@
               ;; evil-lisp-state-map
               )))
 
+(use-package avy
+  :config
+  (setq avy-timeout-seconds 0.25))
+
 (use-package evil
   :init
   (setq evil-toggle-key "C-e")
@@ -116,8 +120,10 @@
     (my-copy-to-xclipboard nil))
   (define-key evil-visual-state-map (kbd "y") 'my-evil-yank)
   (bkevil "M-p" 'my-paste-from-xclipboard)
-  (define-key evil-normal-state-map (kbd "RET") 'quickjump)
-  (define-key evil-visual-state-map (kbd "RET") 'quickjump)
+  (define-key evil-normal-state-map (kbd "<return>") 'avy-goto-char-timer)
+  (define-key evil-visual-state-map (kbd "<return>") 'avy-goto-char-timer)
+  (define-key evil-normal-state-map (kbd "C-<return>") 'avy-goto-word-1)
+  (define-key evil-visual-state-map (kbd "C-<return>") 'avy-goto-word-1)
 
   ;; Make word / search include underscores in symbols.
   ;; (modify-syntax-entry ?_ "w")
@@ -479,7 +485,9 @@
 ;;
 ;; * swiper
 ;;
-;; * "ivy-avy" command.  Good reason to use it instead of quickjump?
+;; * ivy-avy
+;;
+;; * ivy-isearch
 ;;
 ;; * Revisit https://github.com/emacs-evil/evil/blob/master/evil-maps.el
 ;;
