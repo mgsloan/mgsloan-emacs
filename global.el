@@ -124,12 +124,12 @@
   (defun my-return ()
     (interactive)
     (if (eq major-mode 'dired-mode)
-        (dired-find-file)
-        (avy-goto-char-timer)))
+        (call-interactively 'dired-find-file)
+        (call-interactively 'avy-goto-word-1)))
   (define-key evil-normal-state-map (kbd "<return>") 'my-return)
   (define-key evil-visual-state-map (kbd "<return>") 'my-return)
-  (define-key evil-normal-state-map (kbd "C-<return>") 'avy-goto-word-1)
-  (define-key evil-visual-state-map (kbd "C-<return>") 'avy-goto-word-1)
+  (define-key evil-normal-state-map (kbd "C-<return>") 'avy-goto-char-2)
+  (define-key evil-visual-state-map (kbd "C-<return>") 'avy-goto-char-2)
 
   ;; Make word / search include underscores in symbols.
   ;; (modify-syntax-entry ?_ "w")
