@@ -1,7 +1,7 @@
 (use-package diminish)
 (use-package no-littering)
 
-(with-demoted-errors "Error while setting font: %S" (set-frame-font "Hack 10" nil t))
+(with-demoted-errors "Error while setting font: %S" (set-frame-font "Hack 16" nil t))
 
 ;; Newline at end of file, trim trailing whitespace
 (setq require-final-newline t)
