@@ -166,7 +166,17 @@
   (eyebrowse-mode t))
 
 (use-package spacemacs-theme
-  :defer t)
+  :defer t
+  ;; In theory I think this should work, but unfortunately it doesn't,
+  ;; so instead I've just forked the spacemacs theme submodule
+  ;; :config
+  ;; (custom-theme-set-faces
+  ;;  'spacemacs-dark
+  ;;  '(avy-lead-face   ((t(:foreground "#00ff00" :background "#ff0000"))))
+  ;;  '(avy-lead-face-0 ((t (:foreground "#00ff00" :background "#ff0000"))))
+  ;;  '(avy-lead-face-1 ((t (:foreground "#00ff00" :background "#ff0000"))))
+  ;;  '(avy-lead-face-2 ((t (:foreground "#00ff00" :background "#ff0000")))))
+  )
 
 (use-package circadian
   :config
