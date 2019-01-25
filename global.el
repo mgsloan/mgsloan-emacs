@@ -120,8 +120,14 @@
     (my-copy-to-xclipboard nil))
   (define-key evil-visual-state-map (kbd "y") 'my-evil-yank)
   (bkevil "M-p" 'my-paste-from-xclipboard)
-  (define-key evil-normal-state-map (kbd "<return>") 'avy-goto-char-timer)
-  (define-key evil-visual-state-map (kbd "<return>") 'avy-goto-char-timer)
+
+  (defun my-return ()
+    (interactive)
+    (if (eq major-mode 'dired-mode)
+        (dired-find-file)
+        (avy-goto-char-timer)))
+  (define-key evil-normal-state-map (kbd "<return>") 'my-return)
+  (define-key evil-visual-state-map (kbd "<return>") 'my-return)
   (define-key evil-normal-state-map (kbd "C-<return>") 'avy-goto-word-1)
   (define-key evil-visual-state-map (kbd "C-<return>") 'avy-goto-word-1)
 
