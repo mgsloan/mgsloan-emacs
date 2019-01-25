@@ -51,7 +51,7 @@
 	url = https://github.com/wasamasa/eyebrowse.git
 [submodule "straight/repos/spacemacs-theme"]
 	path = straight/repos/spacemacs-theme
-	url = https://github.com/nashamri/spacemacs-theme.git
+	url = https://github.com/mgsloan/spacemacs-theme.git
 [submodule "straight/repos/spaceline"]
 	path = straight/repos/spaceline
 	url = https://github.com/TheBB/spaceline.git
