@@ -53,6 +53,7 @@
 
 (add-to-list 'auto-mode-alist '("dunstrc" . conf-unix-mode))
 (add-to-list 'auto-mode-alist '("local.bashrc" . sh-mode))
+(add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
 
 (defun kill-other-buffers ()
     "Kill all other buffers."
