@@ -97,7 +97,10 @@
 
 (use-package avy
   :config
-  (setq avy-timeout-seconds 0.25))
+  (setq avy-timeout-seconds 0.25)
+  :bind
+  ("<menu>" . 'avy-goto-word-1)
+  ("C-<menu>" . 'avy-goto-char-2))
 
 (use-package evil
   :init
@@ -127,6 +130,8 @@
     (if (eq major-mode 'dired-mode)
         (call-interactively 'dired-find-file)
         (call-interactively 'avy-goto-word-1)))
+  ;; Can also be used in any mode via menu button, but not all my
+  ;; keyboards have one.
   (define-key evil-normal-state-map (kbd "<return>") 'my-return)
   (define-key evil-visual-state-map (kbd "<return>") 'my-return)
   (define-key evil-normal-state-map (kbd "C-<return>") 'avy-goto-char-2)
