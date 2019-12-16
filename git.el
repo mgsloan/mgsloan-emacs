@@ -1,3 +1,9 @@
+(defun mgsloan-repo-list ()
+  (and (string= user-login-name "mgsloan")
+       (string= system-name "treetop")
+       ;; When GIT_DIR is set, repo list won't work
+       (not (getenv "GIT_DIR"))))
+
 (use-package magit
   :init
   (setq
@@ -13,8 +19,45 @@
      magit-process-popup-time 10
      ;; ask me if I want a tracking upstream
      magit-set-upstream-on-push 'askifnotset)
+  :preface
+  (defun list-repos ()
+    "list my repositories"
+    (interactive)
+    (progn (magit-list-repositories)
+           (with-current-buffer
+             (get-buffer "*Magit Repositories*")
+             ;; (tabulated-list-sort 2)
+             (beginning-of-buffer)
+             (current-buffer))))
   :config
-  (add-hook 'git-commit-mode-hook 'evil-insert-state))
+  (add-hook 'git-commit-mode-hook 'evil-insert-state)
+  (setq magit-repolist-columns
+        '(("Name"    25 magit-repolist-column-ident                  ())
+          ("Branch"  10 magit-repolist-column-branch                 ())
+          ("D"        1 magit-repolist-column-dirty                  ())
+          ("L<U"      3 magit-repolist-column-unpulled-from-upstream ((:right-align t)))
+          ("L>U"      3 magit-repolist-column-unpushed-to-upstream   ((:right-align t)))
+          ("Path"    99 magit-repolist-column-path                   ())))
+  (if (mgsloan-repo-list)
+      (setq magit-repository-directories
+            `(("~/proj/site" . DEPTH0)
+              ("~/proj/site/out" . DEPTH0)
+              ("~/proj/site/draft" . DEPTH0)
+              ("~/proj/apply-unordered" . DEPTH0)
+              ("~/proj/nightwriter" . DEPTH0)
+              ("~/proj/storepats" . DEPTH0)
+              ("~/proj/th-orphans" . DEPTH0)
+              ("~/proj/th-reify-many" . DEPTH0)
+              ("~/proj/th-utilities" . DEPTH0)
+              ("~/proj/todoist-shortcuts" . DEPTH0)
+              ("~/proj/unblock-with-intention" . DEPTH0)
+              ("~/docs" . DEPTH0)
+              ("~/.emacs.d" . DEPTH0))))
+  (evil-define-key 'motion magit-repolist-mode-map (kbd "g")
+    'tabulated-list-revert))
+
+(if (mgsloan-repo-list)
+    (setq initial-buffer-choice 'list-repos))
 
 (use-package evil-magit
   :after (magit evil)
