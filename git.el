@@ -41,7 +41,7 @@
           ("L<U"       3 magit-repolist-column-unpulled-from-upstream ((:right-align t)))
           ("L>U"       3 magit-repolist-column-unpushed-to-upstream   ((:right-align t)))
           ("Date"     14 magit-repolist-column-iso-date               ())
-          ("Modified" 16 magit-repolist-column-relative-date          ())
+          ("Modified" 16 magit-repolist-column-relative-date          ((:right-align t)))
           ("Branch"   10 magit-repolist-column-branch                 ())
           ("Path"     99 magit-repolist-column-path                   ())))
   (if (mgsloan-repo-list)
