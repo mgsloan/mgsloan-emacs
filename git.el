@@ -41,7 +41,6 @@
   (if (mgsloan-repo-list)
       (setq magit-repository-directories
             `(("~/proj/site" . DEPTH0)
-              ("~/proj/site/out" . DEPTH0)
               ("~/proj/site/draft" . DEPTH0)
               ("~/proj/apply-unordered" . DEPTH0)
               ("~/proj/nightwriter" . DEPTH0)
