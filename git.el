@@ -23,21 +23,27 @@
   (defun list-repos ()
     "list my repositories"
     (interactive)
-    (progn (magit-list-repositories)
-           (with-current-buffer
-             (get-buffer "*Magit Repositories*")
-             ;; (tabulated-list-sort 2)
-             (beginning-of-buffer)
-             (current-buffer))))
+    (with-current-buffer (get-buffer-create "*Magit Repositories*")
+      (magit-list-repositories)
+      (beginning-of-buffer)
+      (current-buffer)))
+  (defun magit-repolist-column-iso-date (_id)
+    "date column in iso 8601 format"
+    (magit-git-string "log" "-1" "--format=%ci"))
+  (defun magit-repolist-column-relative-date (_id)
+    "timestamp relative to current time"
+    (magit-git-string "log" "-1" "--format=%cr"))
   :config
   (add-hook 'git-commit-mode-hook 'evil-insert-state)
   (setq magit-repolist-columns
-        '(("Name"    25 magit-repolist-column-ident                  ())
-          ("Branch"  10 magit-repolist-column-branch                 ())
-          ("D"        1 magit-repolist-column-dirty                  ())
-          ("L<U"      3 magit-repolist-column-unpulled-from-upstream ((:right-align t)))
-          ("L>U"      3 magit-repolist-column-unpushed-to-upstream   ((:right-align t)))
-          ("Path"    99 magit-repolist-column-path                   ())))
+        '(("Name"     25 magit-repolist-column-ident                  ())
+          ("D"         1 magit-repolist-column-dirty                  ())
+          ("L<U"       3 magit-repolist-column-unpulled-from-upstream ((:right-align t)))
+          ("L>U"       3 magit-repolist-column-unpushed-to-upstream   ((:right-align t)))
+          ("Date"     14 magit-repolist-column-iso-date               ())
+          ("Modified" 16 magit-repolist-column-relative-date          ())
+          ("Branch"   10 magit-repolist-column-branch                 ())
+          ("Path"     99 magit-repolist-column-path                   ())))
   (if (mgsloan-repo-list)
       (setq magit-repository-directories
             `(("~/proj/site" . DEPTH0)
