@@ -292,6 +292,12 @@
 
 (use-package company)
 
+;; (use-package company-tabnine
+;;   :defer t
+;;   :init
+;;   (with-eval-after-load 'company
+;;     (add-to-list 'company-backends 'company-tabnine)))
+
 (use-package flycheck)
 
 ;; Copied and slightly modified from

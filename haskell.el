@@ -14,6 +14,15 @@
     (interactive) (insert "undefined"))
   )
 
+;; (use-package lsp-mode
+;;   :commands lsp)
+
+;; (use-package lsp-ui
+;;   :hook (lsp-mode . lsp-ui-mode))
+
+;; (use-package lsp-haskell)
+  ;; :hook (haskell-mode . lsp))
+
 ;; TODO:
 ;;
 ;; * interactive version of haskell-string-literal-encode and decode
