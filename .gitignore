@@ -1,4 +1,6 @@
-/var/
+.#*
 /straight/build-cache.el
 /straight/build/
-.#*
+/straight/modified/
+/var/
+todo.md
