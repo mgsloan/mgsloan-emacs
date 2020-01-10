@@ -465,6 +465,14 @@
     (setq right-margin-width (- total-margin left-margin-width)))
   (set-window-buffer (selected-window) (current-buffer)))
 
+(defun open-files-in-columns (&rest files)
+  (delete-other-windows)
+  (switch-to-buffer (find-file (car files)))
+  (mapc (lambda (file) (progn (split-window-right)
+                              (windmove-right)
+                              (balance-windows)
+                              (switch-to-buffer (find-file file)))) (cdr files)))
+
 ;; Doesn't work well with multiple frames + non ideal efficiency
 ;;
 ;; (use-package keyfreq
