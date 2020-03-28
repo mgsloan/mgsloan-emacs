@@ -66,7 +66,7 @@
 	url = https://github.com/emacs-evil/evil-surround.git
 [submodule "straight/repos/magit"]
 	path = straight/repos/magit
-	url = https://github.com/magit/magit.git
+	url = https://github.com/mgsloan/magit.git
 [submodule "straight/repos/ghub"]
 	path = straight/repos/ghub
 	url = https://github.com/magit/ghub.git
