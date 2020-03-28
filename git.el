@@ -2,7 +2,8 @@
   (and (string= user-login-name "mgsloan")
        (string= system-name "treetop")
        ;; When GIT_DIR is set, repo list won't work
-       (not (getenv "GIT_DIR"))))
+       (not (getenv "GIT_DIR"))
+       (not (boundp 'suppress-repo-list))))
 
 (use-package magit
   :init
