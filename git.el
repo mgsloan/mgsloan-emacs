@@ -3,7 +3,7 @@
        (string= system-name "treetop")
        ;; When GIT_DIR is set, repo list won't work
        (not (getenv "GIT_DIR"))
-       (not (boundp 'suppress-repo-list))))
+       (not (getenv "SUPPRESS_REPO_LIST"))))
 
 (use-package magit
   :init
