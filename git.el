@@ -57,6 +57,7 @@
               ("~/proj/th-utilities" . DEPTH0)
               ("~/proj/todoist-shortcuts" . DEPTH0)
               ("~/proj/unblock-with-intention" . DEPTH0)
+              ("~/oss/store" . DEPTH0)
               ("~/Arduino/Model01-Firmware" . DEPTH0)
               ("~/docs" . DEPTH0)
               ("~/.emacs.d" . DEPTH0))))
