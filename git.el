@@ -57,6 +57,7 @@
               ("~/proj/th-utilities" . DEPTH0)
               ("~/proj/todoist-shortcuts" . DEPTH0)
               ("~/proj/unblock-with-intention" . DEPTH0)
+              ("~/proj/gmail-label-hider" . DEPTH0)
               ("~/proj/gmail-label-switch-shortcuts" . DEPTH0)
               ("~/oss/qmk_firmware" . DEPTH0)
               ("~/oss/store" . DEPTH0)
