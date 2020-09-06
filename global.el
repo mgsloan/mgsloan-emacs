@@ -444,9 +444,19 @@
 (use-package zoom-frm
   :commands zoom-frm-in zoom-frm-out zoom-frm-unzoom
   :bind
-  (("C-x C--" . zoom-frm-out)
-   ("C-x C-=" . zoom-frm-in)
+  (("C-x C--" . my-zoom-frm-out)
+   ("C-x C-=" . my-zoom-frm-in)
    ("C-x C-0" . zoom-frm-unzoom)))
+
+(defun my-zoom-frm-out ()
+  (interactive)
+  (zoom-frm-out)
+  (zoom-frm-out))
+
+(defun my-zoom-frm-in ()
+  (interactive)
+  (zoom-frm-in)
+  (zoom-frm-in))
 
 ;; TODO: This seems to need package.el.  Instead using a custom function.
 ;; (use-package centered-window :ensure t)
