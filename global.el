@@ -483,6 +483,20 @@
                               (balance-windows)
                               (switch-to-buffer (find-file file)))) (cdr files)))
 
+(defun find-next-file (&optional backward)
+  "Find the next file (by name) in the current directory.
+
+With prefix arg, find the previous file."
+  (interactive "P")
+  (when buffer-file-name
+    (let* ((file (expand-file-name buffer-file-name))
+           (files (cl-remove-if (lambda (file) (cl-first (file-attributes file)))
+                                (sort (directory-files (file-name-directory file) t nil t) 'string<)))
+           (pos (mod (+ (cl-position file files :test 'equal) (if backward -1 1))
+                     (length files))))
+      (find-file (nth pos files)))))
+
+
 ;; Doesn't work well with multiple frames + non ideal efficiency
 ;;
 ;; (use-package keyfreq
