@@ -123,7 +123,7 @@
 	url = https://github.com/flycheck/flycheck-rust.git
 [submodule "straight/repos/undo-tree"]
 	path = straight/repos/undo-tree
-	url = https://github.com/emacsmirror/undo-tree.git
+	url = https://github.com/emacs-straight/undo-tree.git
 [submodule "straight/repos/emacs-smeargle"]
 	path = straight/repos/emacs-smeargle
 	url = https://github.com/syohex/emacs-smeargle.git
@@ -184,3 +184,24 @@
 [submodule "straight/repos/avy"]
 	path = straight/repos/avy
 	url = https://github.com/abo-abo/avy.git
+[submodule "straight/repos/transient"]
+	path = straight/repos/transient
+	url = https://github.com/magit/transient.git
+[submodule "straight/repos/smeargle"]
+	path = straight/repos/smeargle
+	url = https://github.com/emacsorphanage/smeargle.git
+[submodule "straight/repos/pkg-info"]
+	path = straight/repos/pkg-info
+	url = https://github.com/emacsorphanage/pkg-info.git
+[submodule "straight/repos/let-alist"]
+	path = straight/repos/let-alist
+	url = https://github.com/emacs-straight/let-alist.git
+[submodule "straight/repos/gnu-elpa-mirror"]
+	path = straight/repos/gnu-elpa-mirror
+	url = https://github.com/emacs-straight/gnu-elpa-mirror.git
+[submodule "straight/repos/emacsmirror-mirror"]
+	path = straight/repos/emacsmirror-mirror
+	url = https://github.com/emacs-straight/emacsmirror-mirror.git
+[submodule "straight/repos/el-get"]
+	path = straight/repos/el-get
+	url = https://github.com/dimitri/el-get.git
