@@ -205,3 +205,9 @@
 [submodule "straight/repos/el-get"]
 	path = straight/repos/el-get
 	url = https://github.com/dimitri/el-get.git
+[submodule "y"]
+	path = straight/repos/annalist.el
+	url = https://github.com/noctuid/annalist.el.git
+[submodule "straight/repos/evil-collection"]
+	path = straight/repos/evil-collection
+	url = https://github.com/emacs-evil/evil-collection.git

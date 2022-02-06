@@ -106,6 +106,7 @@
 (use-package evil
   :init
   (setq evil-toggle-key "C-e")
+  (setq evil-want-keybinding nil)
   :config
   (evil-mode 1)
   (bkevil "<left>" 'windmove-left)

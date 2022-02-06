@@ -75,11 +75,12 @@
 (if (mgsloan-repo-list)
     (setq initial-buffer-choice 'list-repos))
 
-(use-package evil-magit
+(use-package evil-collection
   :after (magit evil)
   :config
   ;; Use evil keybindings for all of magit except for magit-status
-  (push '("magit:.*" . emacs) evil-buffer-regexps))
+  (push '("magit:.*" . emacs) evil-buffer-regexps)
+  (evil-collection-init))
 
 ;; major mode for editing `git rebase -i` files
 ;; (use-package rebase-mode)
