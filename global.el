@@ -245,8 +245,10 @@
     "gy" 'git-link-commit
   ))
 
-(use-package helm-projectile)
-(use-package helm-rg)
+(use-package helm-projectile
+  :defer t)
+(use-package helm-rg
+  :defer t)
 
 (use-package helm
   :diminish helm-mode
