@@ -211,3 +211,9 @@
 [submodule "straight/repos/evil-collection"]
 	path = straight/repos/evil-collection
 	url = https://github.com/emacs-evil/evil-collection.git
+[submodule "straight/repos/visual-fill-column"]
+	path = straight/repos/visual-fill-column
+	url = https://codeberg.org/joostkremers/visual-fill-column.git
+[submodule "straight/repos/writeroom-mode"]
+	path = straight/repos/writeroom-mode
+	url = https://github.com/joostkremers/writeroom-mode.git

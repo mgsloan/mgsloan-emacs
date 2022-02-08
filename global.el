@@ -462,22 +462,7 @@
   (zoom-frm-in)
   (zoom-frm-in))
 
-;; TODO: This seems to need package.el.  Instead using a custom function.
-;; (use-package centered-window :ensure t)
-;;
-;; TODO: Would be nice to have auto-re-center
-;;
-;; From https://stackoverflow.com/a/24957203
-(defun my/center (width)
-  (interactive "nBuffer width: ")
-  (let* ((adj          (- (window-text-width)
-                          width))
-         (total-margin (+ adj
-                          left-margin-width
-                          right-margin-width)))
-    (setq left-margin-width  (/ total-margin 2))
-    (setq right-margin-width (- total-margin left-margin-width)))
-  (set-window-buffer (selected-window) (current-buffer)))
+(use-package writeroom-mode)
 
 (defun open-files-in-columns (&rest files)
   (delete-other-windows)
