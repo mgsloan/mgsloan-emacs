@@ -485,6 +485,8 @@ With prefix arg, find the previous file."
                      (length files))))
       (find-file (nth pos files)))))
 
+(use-package elisp-format)
+
 
 ;; Doesn't work well with multiple frames + non ideal efficiency
 ;;
