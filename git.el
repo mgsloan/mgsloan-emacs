@@ -1,76 +1,83 @@
 (defun mgsloan-repo-list ()
   (and (string= user-login-name "mgsloan")
-       (string= system-name "treetop")
+       (or (string= system-name "treetop")
+           (string= system-name "machine"))
        ;; When GIT_DIR is set, repo list won't work
        (not (getenv "GIT_DIR"))
        (not (getenv "SUPPRESS_REPO_LIST"))))
 
-(use-package magit
-  :init
-  (setq
-     ;; don't put "origin-" in front of new branch names by default
-     magit-default-tracking-name-function 'magit-default-tracking-name-branch-only
-     ;; open magit status in same window as current buffer
-     magit-status-buffer-switch-function 'switch-to-buffer
-     ;; highlight word/letter changes in hunk diffs
-     magit-diff-refine-hunk t
-     ;; ask me if I want to include a revision when rewriting
-     magit-rewrite-inclusive 'ask
-     ;; pop the process buffer if we're taking a while to complete
-     magit-process-popup-time 10
-     ;; ask me if I want a tracking upstream
-     magit-set-upstream-on-push 'askifnotset)
-  :preface
-  (defun list-repos ()
-    "list my repositories"
-    (interactive)
-    (with-current-buffer (get-buffer-create "*Magit Repositories*")
-      (magit-list-repositories)
-      (beginning-of-buffer)
-      (current-buffer)))
+(use-package
+  magit
+  :init (setq
+         ;; don't put "origin-" in front of new branch names by default
+         magit-default-tracking-name-function 'magit-default-tracking-name-branch-only
+         ;; open magit status in same window as current buffer
+         magit-status-buffer-switch-function 'switch-to-buffer
+         ;; highlight word/letter changes in hunk diffs
+         magit-diff-refine-hunk t
+         ;; ask me if I want to include a revision when rewriting
+         magit-rewrite-inclusive 'ask
+         ;; pop the process buffer if we're taking a while to complete
+         magit-process-popup-time 10
+         ;; ask me if I want a tracking upstream
+         magit-set-upstream-on-push 'askifnotset)
+  :preface (defun list-repos ()
+             "list my repositories"
+             (interactive)
+             (with-current-buffer (get-buffer-create "*Magit Repositories*")
+               (magit-list-repositories)
+               (beginning-of-buffer)
+               (current-buffer)))
   (defun magit-repolist-column-iso-date (_id)
     "date column in iso 8601 format"
     (magit-git-string "log" "-1" "--format=%ci"))
   (defun magit-repolist-column-relative-date (_id)
     "timestamp relative to current time"
     (magit-git-string "log" "-1" "--format=%cr"))
-  :config
-  (add-hook 'git-commit-mode-hook 'evil-insert-state)
-  (setq magit-repolist-columns
-        '(("Name"     25 magit-repolist-column-ident                  ())
-          ("D"         1 magit-repolist-column-dirty                  ())
-          ("L<U"       3 magit-repolist-column-unpulled-from-upstream ((:right-align t)))
-          ("L>U"       3 magit-repolist-column-unpushed-to-upstream   ((:right-align t)))
-          ("Date"     14 magit-repolist-column-iso-date               ())
-          ("Modified" 16 magit-repolist-column-relative-date          ((:right-align t)))
-          ("Branch"   10 magit-repolist-column-branch                 ())
-          ("Path"     99 magit-repolist-column-path                   ())))
+  :config (add-hook 'git-commit-mode-hook 'evil-insert-state)
+  (setq magit-repolist-columns '(("Name"     25 magit-repolist-column-ident                  ())
+                                 ("D"         1 magit-repolist-column-dirty                  ())
+                                 ("L<U"       3 magit-repolist-column-unpulled-from-upstream
+                                  ((:right-align t)))
+                                 ("L>U"       3 magit-repolist-column-unpushed-to-upstream
+                                  ((:right-align t)))
+                                 ("Date"     14 magit-repolist-column-iso-date               ())
+                                 ("Modified" 16 magit-repolist-column-relative-date
+                                  ((:right-align t)))
+                                 ("Branch"   10 magit-repolist-column-branch                 ())
+                                 ("Path"     99 magit-repolist-column-path                   ())))
   (if (mgsloan-repo-list)
       (setq magit-repository-directories
-            `(
-              ("~/.emacs.d" . DEPTH0)
-              ("~/.roam-backup" . DEPTH0)
-              ("~/Arduino/Model01-Firmware" . DEPTH0)
-              ("~/docs" . DEPTH0)
-              ("~/oss/qmk_firmware" . DEPTH0)
-              ("~/oss/store" . DEPTH0)
-              ("~/proj/apply-unordered" . DEPTH0)
-              ("~/proj/gmail-label-hider" . DEPTH0)
-              ("~/proj/gmail-label-switch-shortcuts" . DEPTH0)
-              ("~/proj/nightwriter" . DEPTH0)
-              ("~/proj/roam-navigator" . DEPTH0)
-              ("~/proj/site" . DEPTH0)
-              ("~/proj/site/draft" . DEPTH0)
-              ("~/proj/squarespace-escape-suppressor" . DEPTH0)
-              ("~/proj/storepats" . DEPTH0)
-              ("~/proj/th-orphans" . DEPTH0)
-              ("~/proj/th-reify-many" . DEPTH0)
-              ("~/proj/th-utilities" . DEPTH0)
-              ("~/proj/todoist-shortcuts" . DEPTH0)
-              ("~/proj/unblock-with-intention" . DEPTH0)
-             )))
-  (evil-define-key 'motion magit-repolist-mode-map (kbd "g")
-    'tabulated-list-revert))
+            (if (string= system-name "treetop")
+                `(("~/.emacs.d" . DEPTH0)
+                  ("~/.roam-backup" . DEPTH0)
+                  ("~/Arduino/Model01-Firmware" . DEPTH0)
+                  ("~/docs" . DEPTH0)
+                  ("~/oss/qmk_firmware" . DEPTH0)
+                  ("~/oss/store" . DEPTH0)
+                  ("~/proj/apply-unordered" . DEPTH0)
+                  ("~/proj/gmail-label-hider" . DEPTH0)
+                  ("~/proj/gmail-label-switch-shortcuts" . DEPTH0)
+                  ("~/proj/nightwriter" . DEPTH0)
+                  ("~/proj/roam-navigator" . DEPTH0)
+                  ("~/proj/site" . DEPTH0)
+                  ("~/proj/site/draft" . DEPTH0)
+                  ("~/proj/squarespace-escape-suppressor" . DEPTH0)
+                  ("~/proj/storepats" . DEPTH0)
+                  ("~/proj/th-orphans" . DEPTH0)
+                  ("~/proj/th-reify-many" . DEPTH0)
+                  ("~/proj/th-utilities" . DEPTH0)
+                  ("~/proj/todoist-shortcuts" . DEPTH0)
+                  ("~/proj/unblock-with-intention" . DEPTH0))
+              `(("~/.emacs.d" . DEPTH0)
+                ("~/.roam-backup" . DEPTH0)
+                ("~/docs" . DEPTH0)
+                ("~/proj/gmail-label-switch-shortcuts" . DEPTH0)
+                ("~/proj/roam-navigator" . DEPTH0)
+                ("~/proj/site" . DEPTH0)
+                ("~/proj/todoist-shortcuts" . DEPTH0)
+                ("~/proj/unblock-with-intention" . DEPTH0)))))
+  (evil-define-key 'motion magit-repolist-mode-map (kbd "g") 'tabulated-list-revert))
 
 (if (mgsloan-repo-list)
     (setq initial-buffer-choice 'list-repos))
