@@ -220,3 +220,6 @@
 [submodule "straight/repos/elisp-format"]
 	path = straight/repos/elisp-format
 	url = https://github.com/Yuki-Inoue/elisp-format.git
+[submodule "straight/repos/queue"]
+	path = straight/repos/queue
+	url = https://github.com/emacs-straight/queue.git
