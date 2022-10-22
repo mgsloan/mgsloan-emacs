@@ -168,11 +168,6 @@
   ("M-9" . 'winum-select-window-9)
   )
 
-(use-package eyebrowse
-  :diminish eyebrowse-mode
-  :config
-  (eyebrowse-mode t))
-
 (use-package spacemacs-theme
   :defer t
   ;; In theory I think this should work, but unfortunately it doesn't,
@@ -213,13 +208,6 @@
   :diminish undo-tree-mode
   :config
   (setq undo-tree-auto-save-history t))
-
-;; TODO: get in the habit of using
-(use-package evil-surround
-  :config
-  (global-evil-surround-mode 1))
-
-(use-package command-log-mode)
 
 ;; Custom keybinding
 (use-package general
@@ -289,20 +277,6 @@
 	("C-z" . helm-select-action)
   ))
 
-
-(use-package ag)
-
-(use-package wgrep-ag)
-
-(use-package company)
-
-;; (use-package company-tabnine
-;;   :defer t
-;;   :init
-;;   (with-eval-after-load 'company
-;;     (add-to-list 'company-backends 'company-tabnine)))
-
-(use-package flycheck)
 
 ;; Copied and slightly modified from
 ;; https://github.com/jwiegley/dot-emacs/blob/e4b5661f72d774fbeeaca6bf900f4cacbba2ba6e/init.el#L2295
@@ -436,11 +410,6 @@
        (advice-add 'magit-branch-and-checkout
                    :after #'my-projectile-invalidate-cache))))
 
-;; TODO: better keybinding
-;; (use-package crosshairs
-;;   :init
-;;   (bkevil "C-f" 'flash-crosshairs))
-
 (use-package rainbow-delimiters)
 
 (use-package unfill)
@@ -484,9 +453,6 @@ With prefix arg, find the previous file."
            (pos (mod (+ (cl-position file files :test 'equal) (if backward -1 1))
                      (length files))))
       (find-file (nth pos files)))))
-
-(use-package elisp-format)
-
 
 ;; Doesn't work well with multiple frames + non ideal efficiency
 ;;
@@ -551,3 +517,32 @@ With prefix arg, find the previous file."
 ;;   replicating affect.
 ;;
 ;; * habit of using evil-mc
+
+;; Things I never really started using, but might resurrect one day
+
+;; (use-package eyebrowse
+;;   :diminish eyebrowse-mode
+;;   :config
+;;   (eyebrowse-mode t))
+
+;; (use-package command-log-mode)
+
+;; (use-package evil-surround
+;;   :config
+;;   (global-evil-surround-mode 1))
+
+;; (use-package company)
+
+;; (use-package company-tabnine
+;;   :defer t
+;;   :init
+;;   (with-eval-after-load 'company
+;;     (add-to-list 'company-backends 'company-tabnine)))
+
+;; (use-package flycheck)
+
+;; (use-package crosshairs
+;;   :init
+;;   (bkevil "C-f" 'flash-crosshairs))
+
+;; (use-package elisp-format)

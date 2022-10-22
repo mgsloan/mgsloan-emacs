@@ -1,9 +1,12 @@
-(use-package rust-mode
-  ;; TODO: figure out why demand is needed for it to auto start on .rs files
-  :demand
-  :mode "\\.rs\\'"
-  :hook (rust-mode . (lambda () (set-fill-column 100)))
-  )
+;; Commented out as I'm not really using it
+;;
+;; (use-package rust-mode
+;;   ;; TODO: figure out why demand is needed for it to auto start on .rs files
+;;   :demand
+;;   :mode "\\.rs\\'"
+;;   :hook (rust-mode . (lambda () (set-fill-column 100)))
+;;   )
+
 
 ;; TODO: Figure out why racer is so darn slow
 ;;

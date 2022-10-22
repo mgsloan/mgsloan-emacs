@@ -1,15 +1,9 @@
 [submodule "straight/repos/circadian.el"]
 	path = straight/repos/circadian.el
 	url = https://github.com/GuidoSchmidt/circadian.el.git
-[submodule "straight/repos/elpa"]
-	path = straight/repos/elpa
-	url = https://git.savannah.gnu.org/git/emacs/elpa.git
 [submodule "straight/repos/melpa"]
 	path = straight/repos/melpa
 	url = https://github.com/melpa/melpa.git
-[submodule "straight/repos/epkgs"]
-	path = straight/repos/epkgs
-	url = https://github.com/emacsmirror/epkgs.git
 [submodule "straight/repos/straight.el"]
 	path = straight/repos/straight.el
 	url = https://github.com/raxod502/straight.el.git
@@ -46,9 +40,6 @@
 [submodule "straight/repos/persp-mode.el"]
 	path = straight/repos/persp-mode.el
 	url = https://github.com/Bad-ptr/persp-mode.el.git
-[submodule "straight/repos/eyebrowse"]
-	path = straight/repos/eyebrowse
-	url = https://github.com/wasamasa/eyebrowse.git
 [submodule "straight/repos/spacemacs-theme"]
 	path = straight/repos/spacemacs-theme
 	url = https://github.com/mgsloan/spacemacs-theme.git
@@ -61,51 +52,18 @@
 [submodule "straight/repos/s.el"]
 	path = straight/repos/s.el
 	url = https://github.com/magnars/s.el.git
-[submodule "straight/repos/evil-surround"]
-	path = straight/repos/evil-surround
-	url = https://github.com/emacs-evil/evil-surround.git
 [submodule "straight/repos/magit"]
 	path = straight/repos/magit
 	url = https://github.com/mgsloan/magit.git
-[submodule "straight/repos/ghub"]
-	path = straight/repos/ghub
-	url = https://github.com/magit/ghub.git
 [submodule "straight/repos/with-editor"]
 	path = straight/repos/with-editor
 	url = https://github.com/magit/with-editor.git
-[submodule "straight/repos/magit-popup"]
-	path = straight/repos/magit-popup
-	url = https://github.com/magit/magit-popup.git
-[submodule "straight/repos/rust-mode"]
-	path = straight/repos/rust-mode
-	url = https://github.com/rust-lang/rust-mode.git
-[submodule "straight/repos/haskell-mode"]
-	path = straight/repos/haskell-mode
-	url = https://github.com/mgsloan/haskell-mode.git
 [submodule "straight/repos/emacs-helm-ag"]
 	path = straight/repos/emacs-helm-ag
 	url = https://github.com/syohex/emacs-helm-ag.git
 [submodule "straight/repos/general.el"]
 	path = straight/repos/general.el
 	url = https://github.com/noctuid/general.el.git
-[submodule "straight/repos/ag.el"]
-	path = straight/repos/ag.el
-	url = https://github.com/Wilfred/ag.el.git
-[submodule "straight/repos/Emacs-wgrep"]
-	path = straight/repos/Emacs-wgrep
-	url = https://github.com/mhayashi1120/Emacs-wgrep.git
-[submodule "straight/repos/company-mode"]
-	path = straight/repos/company-mode
-	url = https://github.com/company-mode/company-mode.git
-[submodule "straight/repos/flycheck"]
-	path = straight/repos/flycheck
-	url = https://github.com/flycheck/flycheck.git
-[submodule "straight/repos/pkg-info.el"]
-	path = straight/repos/pkg-info.el
-	url = https://github.com/lunaryorn/pkg-info.el.git
-[submodule "straight/repos/epl"]
-	path = straight/repos/epl
-	url = https://github.com/cask/epl.git
 [submodule "straight/repos/git-link"]
 	path = straight/repos/git-link
 	url = https://github.com/sshaw/git-link.git
@@ -124,9 +82,6 @@
 [submodule "straight/repos/undo-tree"]
 	path = straight/repos/undo-tree
 	url = https://github.com/emacs-straight/undo-tree.git
-[submodule "straight/repos/emacs-smeargle"]
-	path = straight/repos/emacs-smeargle
-	url = https://github.com/syohex/emacs-smeargle.git
 [submodule "straight/repos/counsel-projectile"]
 	path = straight/repos/counsel-projectile
 	url = https://github.com/ericdanan/counsel-projectile.git
@@ -142,27 +97,9 @@
 [submodule "straight/repos/markdown-mode"]
 	path = straight/repos/markdown-mode
 	url = https://github.com/jrblevin/markdown-mode.git
-[submodule "straight/repos/mmm-mode"]
-	path = straight/repos/mmm-mode
-	url = https://github.com/purcell/mmm-mode
 [submodule "straight/repos/unfill"]
 	path = straight/repos/unfill
 	url = https://github.com/purcell/unfill.git
-[submodule "straight/repos/graphql.el"]
-	path = straight/repos/graphql.el
-	url = https://github.com/vermiculus/graphql.el.git
-[submodule "straight/repos/treepy.el"]
-	path = straight/repos/treepy.el
-	url = https://github.com/volrath/treepy.el.git
-[submodule "straight/repos/keyfreq"]
-	path = straight/repos/keyfreq
-	url = https://github.com/dacap/keyfreq.git
-[submodule "straight/repos/command-log-mode"]
-	path = straight/repos/command-log-mode
-	url = https://github.com/lewang/command-log-mode.git
-[submodule "straight/repos/evil-magit"]
-	path = straight/repos/evil-magit
-	url = https://github.com/emacs-evil/evil-magit.git
 [submodule "straight/repos/evil-mc"]
 	path = straight/repos/evil-mc
 	url = https://github.com/gabesoft/evil-mc.git
@@ -190,12 +127,6 @@
 [submodule "straight/repos/smeargle"]
 	path = straight/repos/smeargle
 	url = https://github.com/emacsorphanage/smeargle.git
-[submodule "straight/repos/pkg-info"]
-	path = straight/repos/pkg-info
-	url = https://github.com/emacsorphanage/pkg-info.git
-[submodule "straight/repos/let-alist"]
-	path = straight/repos/let-alist
-	url = https://github.com/emacs-straight/let-alist.git
 [submodule "straight/repos/gnu-elpa-mirror"]
 	path = straight/repos/gnu-elpa-mirror
 	url = https://github.com/emacs-straight/gnu-elpa-mirror.git
@@ -217,9 +148,6 @@
 [submodule "straight/repos/writeroom-mode"]
 	path = straight/repos/writeroom-mode
 	url = https://github.com/joostkremers/writeroom-mode.git
-[submodule "straight/repos/elisp-format"]
-	path = straight/repos/elisp-format
-	url = https://github.com/Yuki-Inoue/elisp-format.git
 [submodule "straight/repos/queue"]
 	path = straight/repos/queue
 	url = https://github.com/emacs-straight/queue.git
