@@ -1,9 +1,6 @@
 [submodule "straight/repos/circadian.el"]
 	path = straight/repos/circadian.el
 	url = https://github.com/GuidoSchmidt/circadian.el.git
-[submodule "straight/repos/melpa"]
-	path = straight/repos/melpa
-	url = https://github.com/melpa/melpa.git
 [submodule "straight/repos/straight.el"]
 	path = straight/repos/straight.el
 	url = https://github.com/raxod502/straight.el.git
@@ -127,12 +124,6 @@
 [submodule "straight/repos/smeargle"]
 	path = straight/repos/smeargle
 	url = https://github.com/emacsorphanage/smeargle.git
-[submodule "straight/repos/gnu-elpa-mirror"]
-	path = straight/repos/gnu-elpa-mirror
-	url = https://github.com/emacs-straight/gnu-elpa-mirror.git
-[submodule "straight/repos/emacsmirror-mirror"]
-	path = straight/repos/emacsmirror-mirror
-	url = https://github.com/emacs-straight/emacsmirror-mirror.git
 [submodule "straight/repos/el-get"]
 	path = straight/repos/el-get
 	url = https://github.com/dimitri/el-get.git
