@@ -145,3 +145,6 @@
 [submodule "straight/repos/compat"]
 	path = straight/repos/compat
 	url = https://github.com/emacs-straight/compat.git
+[submodule "straight/repos/haskell-mode"]
+	path = straight/repos/haskell-mode
+	url = https://github.com/haskell/haskell-mode
