@@ -127,11 +127,13 @@
   (define-key evil-visual-state-map (kbd "y") 'my-evil-yank)
   (bkevil "M-p" 'my-paste-from-xclipboard)
 
+  ;; This is probably not the idiomatic way to do this, but it works!
   (defun my-return ()
     (interactive)
-    (if (eq major-mode 'dired-mode)
-        (call-interactively 'dired-find-file)
-        (call-interactively 'avy-goto-word-1)))
+    (cond
+     ((eq major-mode 'dired-mode) (call-interactively 'dired-find-file))
+     ((eq major-mode 'magit-repolist-mode) (call-interactively 'magit-repolist-status))
+     ((t) (call-interactively 'avy-goto-word-1))))
   ;; Can also be used in any mode via menu button, but not all my
   ;; keyboards have one.
   (define-key evil-normal-state-map (kbd "<return>") 'my-return)
