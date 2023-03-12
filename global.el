@@ -22,6 +22,7 @@
 (menu-bar-mode -1)
 (blink-cursor-mode -1)
 (setq ring-bell-function 'ignore)
+(setq column-number-mode t)
 
 ;; Enable y/n answers
 (fset 'yes-or-no-p 'y-or-n-p)
