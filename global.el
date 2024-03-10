@@ -184,15 +184,12 @@
   ;;  '(avy-lead-face-2 ((t (:foreground "#00ff00" :background "#ff0000")))))
   )
 
-(use-package circadian
-  :config
-  (setq
-    calendar-location-name "CO"
-    calendar-latitude 40
-    calendar-longitude -105)
-  (setq circadian-themes '((:sunrise . spacemacs-light)
-                           (:sunset . spacemacs-dark)))
-  (circadian-setup))
+(use-package auto-dark
+  :init
+  (setq auto-dark-dark-theme 'spacemacs-dark)
+  (setq auto-dark-light-theme 'spacemacs-light)
+  (setq auto-dark-polling-interval-seconds 5)
+  :config (auto-dark-mode t))
 
 (use-package spaceline
   :after (winum eyebrowse)

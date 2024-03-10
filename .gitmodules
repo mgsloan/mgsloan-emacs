@@ -151,3 +151,6 @@
 [submodule "straight/repos/js2-mode"]
 	path = straight/repos/js2-mode
 	url = https://github.com/mooz/js2-mode.git
+[submodule "auto-dark-emacs"]
+	path = auto-dark-emacs
+	url = https://github.com/LionyxML/auto-dark-emacs
