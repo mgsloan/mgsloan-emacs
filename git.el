@@ -53,7 +53,6 @@
             ;;      (seq-filter (lambda (path) (file-exists-p (concat path "/.git")))
             ;;                  (directory-files "~/proj/" t directory-files-no-dot-files-regexp)))
               `(("~/.emacs.d" . DEPTH0)
-                ("~/.roam-backup" . DEPTH0)
                 ("~/oss/store" . DEPTH0)
                 ("~/oss/th-orphans" . DEPTH0)
                 ("~/oss/th-utilities" . DEPTH0)
