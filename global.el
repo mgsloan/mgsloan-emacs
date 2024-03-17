@@ -1,6 +1,10 @@
 (use-package diminish)
 (use-package no-littering)
 
+;; Include path to current file in title, so that it gets picked up by
+;; https://github.com/mgsloan/mgsloan-dotfiles/blob/master/env/src/Notes.hs
+(setq frame-title-format `((buffer-file-name "%f" "%b")," - Emacs"))
+
 (with-demoted-errors "Error while setting font: %S"
   (set-frame-font (if (getenv "HIDPI") "Hack 16" "Hack 10") nil t))
 
