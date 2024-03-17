@@ -20,7 +20,9 @@
          ;; pop the process buffer if we're taking a while to complete
          magit-process-popup-time 10
          ;; ask me if I want a tracking upstream
-         magit-set-upstream-on-push 'askifnotset)
+         magit-set-upstream-on-push 'askifnotset
+         ;; word-level diffs
+         magit-diff-refine-hunk (quote all))
   :preface (defun list-repos ()
              "list my repositories"
              (interactive)
@@ -34,7 +36,10 @@
   (defun magit-repolist-column-relative-date (_id)
     "timestamp relative to current time"
     (magit-git-string "log" "-1" "--format=%cr"))
-  :config (add-hook 'git-commit-mode-hook 'evil-insert-state)
+  :config
+  (add-hook 'git-commit-mode-hook 'evil-insert-state)
+  (add-hook 'git-diff-mode-hook #'my-wrap-lines)
+  (add-hook 'magit-mode-hook #'my-wrap-lines)
   (setq magit-repolist-columns '(("Name"     25 magit-repolist-column-ident                  ())
                                  ("D"         1 magit-repolist-column-dirty                  ())
                                  ("L<U"       3 magit-repolist-column-unpulled-from-upstream
@@ -66,6 +71,10 @@
                 ("~/proj/todoist-shortcuts" . DEPTH0)
                 ("~/proj/unblock-with-intention" . DEPTH0))))
   (evil-define-key 'motion magit-repolist-mode-map (kbd "g") 'tabulated-list-revert))
+
+(defun my-wrap-lines ()
+  "Disable `truncate-lines' in the current buffer."
+  (setq truncate-lines nil))
 
 (if (mgsloan-repo-list)
     (setq initial-buffer-choice 'list-repos))
