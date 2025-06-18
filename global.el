@@ -31,10 +31,6 @@
 ;; Enable y/n answers
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;; Set user info
-(setq user-full-name "Michael Sloan"
-      user-mail-address "mgsloan@gmail.com")
-
 ;; Always load newest byte code
 (setq load-prefer-newer t)
 
@@ -59,14 +55,6 @@
 
 (add-to-list 'auto-mode-alist '("dunstrc" . conf-unix-mode))
 (add-to-list 'auto-mode-alist '("local.bashrc" . sh-mode))
-(add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
-
-(defun kill-other-buffers ()
-    "Kill all other buffers."
-    (interactive)
-    (mapc 'kill-buffer
-          (delq (current-buffer)
-                (remove-if-not 'buffer-file-name (buffer-list)))))
 
 (defun unfill-paragraph ()
   "Takes a multi-line paragraph and makes it into a single line of text."
@@ -130,63 +118,10 @@
     (evil-yank beg end type register yank-handler)
     (my-copy-to-xclipboard nil))
   (define-key evil-visual-state-map (kbd "y") 'my-evil-yank)
-  (bkevil "M-p" 'my-paste-from-xclipboard)
-
-  ;; ;; This is probably not the idiomatic way to do this, but it works!
-  ;; (defun my-return ()
-  ;;   (interactive)
-  ;;   (cond
-  ;;    ((eq major-mode 'dired-mode) (call-interactively 'dired-find-file))
-  ;;    ((eq major-mode 'magit-repolist-mode) (call-interactively 'magit-repolist-status))
-  ;;    ((t) (call-interactively 'avy-goto-word-1))))
-  ;; ;; Can also be used in any mode via menu button, but not all my
-  ;; ;; keyboards have one.
-  ;; (define-key evil-normal-state-map (kbd "<return>") 'my-return)
-  ;; (define-key evil-visual-state-map (kbd "<return>") 'my-return)
-  ;; (define-key evil-normal-state-map (kbd "C-<return>") 'avy-goto-char-2)
-  ;; (define-key evil-visual-state-map (kbd "C-<return>") 'avy-goto-char-2)
-
-  ;; Make word / search include underscores in symbols.
-  ;; (modify-syntax-entry ?_ "w")
-
-  ;; TODO: figure out how to do this for * and # without modifying
-  ;; other motions.
-  )
-
-(use-package evil-mc
-  :after evil)
-
-(use-package winum
-  :diminish winmum-mode
-  :init
-  (setq winum-auto-setup-mode-line nil)
-  :config
-  (winum-mode t)
-  :bind
-  ("M-0" . 'winum-select-window-0-or-10)
-  ("M-1" . 'winum-select-window-1)
-  ("M-2" . 'winum-select-window-2)
-  ("M-3" . 'winum-select-window-3)
-  ("M-4" . 'winum-select-window-4)
-  ("M-5" . 'winum-select-window-5)
-  ("M-6" . 'winum-select-window-6)
-  ("M-7" . 'winum-select-window-7)
-  ("M-8" . 'winum-select-window-8)
-  ("M-9" . 'winum-select-window-9)
-  )
+  (bkevil "M-p" 'my-paste-from-xclipboard))
 
 (use-package spacemacs-theme
-  :defer t
-  ;; In theory I think this should work, but unfortunately it doesn't,
-  ;; so instead I've just forked the spacemacs theme submodule
-  ;; :config
-  ;; (custom-theme-set-faces
-  ;;  'spacemacs-dark
-  ;;  '(avy-lead-face   ((t(:foreground "#00ff00" :background "#ff0000"))))
-  ;;  '(avy-lead-face-0 ((t (:foreground "#00ff00" :background "#ff0000"))))
-  ;;  '(avy-lead-face-1 ((t (:foreground "#00ff00" :background "#ff0000"))))
-  ;;  '(avy-lead-face-2 ((t (:foreground "#00ff00" :background "#ff0000")))))
-  )
+  :defer t)
 
 (use-package auto-dark
   :init
@@ -205,31 +140,16 @@
   (spaceline-toggle-major-mode-off)
   (spaceline-toggle-buffer-position-off)
   (spaceline-toggle-buffer-encoding-abbrev-off)
-  (spaceline-toggle-hud-off)
-  )
+  (spaceline-toggle-hud-off))
 
-(use-package undo-tree
-  :diminish undo-tree-mode
-  :config
-  (setq undo-tree-auto-save-history t))
-
-;; Custom keybinding
 (use-package general
   :config
   (general-define-key
     :states '(normal visual insert emacs)
     :prefix "SPC"
     :non-normal-prefix "M-SPC"
-    ;; TODO: Make this not use the "do-" variant when in low-battery use mode
-
     "saP" 'helm-projectile-rg
     "sf" 'helm-projectile-find-file
-
-    ;; TODO: pick a better keybinding.  If you miss the space, this
-    ;; replaces a char with l.
-
-    "rl" 'helm-resume
-
     "gs" 'magit-status
     "gh" 'magit-status-here
     "gl" 'list-repos
@@ -239,6 +159,7 @@
 
 (use-package helm-projectile
   :defer t)
+
 (use-package helm-rg
   :defer t)
 
@@ -266,21 +187,16 @@
   (with-eval-after-load 'helm-files
     (dolist (keymap (list helm-find-files-map helm-read-file-map))
       (define-key keymap (kbd "C-h") 'helm-find-files-up-one-level)))
-  ;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-  ;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
   :bind
   ("M-x" . 'helm-M-x)
-  ;; ("C-x C-f" . 'helm-find-files)
-  ;; ("C-z" . 'helm-mini)
   :bind
   (:map helm-map
-	("<tab>" . helm-execute-persistent-action)
 	;; For some reason this is needed in order to bind tab in terminal, not sure why.
 	;; https://github.com/psibi/dotfiles/blob/533c9103c68c4c8ba14aa2f867af4ae591d2ce4c/.emacs.d/init.el#L219
+	("<tab>" . helm-execute-persistent-action)
 	("C-i" . helm-execute-persistent-action)
 	("C-z" . helm-select-action)
   ))
-
 
 ;; Copied and slightly modified from
 ;; https://github.com/jwiegley/dot-emacs/blob/e4b5661f72d774fbeeaca6bf900f4cacbba2ba6e/init.el#L2295
@@ -305,7 +221,6 @@
               ("C-k" . ivy-switch-buffer-kill))
 
   :custom
-  ;; (ivy-dynamic-exhibit-delay-ms 100)
   (ivy-height 10)
   (ivy-initial-inputs-alist nil t)
   (ivy-magic-tilde nil)
@@ -340,14 +255,6 @@
     (let ((ivy-sort-functions-alist '((t . nil))))
       (apply 'ivy-completing-read args)))
 
-  ;; https://github.com/abo-abo/swiper/issues/1068#issuecomment-318124861
-  ;; FIXME: use
-  (defun ivy-with-thing-at-point (cmd)
-  (let ((ivy-initial-inputs-alist
-         (list
-          (cons cmd (thing-at-point 'symbol)))))
-    (funcall cmd)))
-
   :config
   (ivy-mode 1)
   (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur))
@@ -363,22 +270,6 @@
                    "\\'\\)"))
 
   :bind (("M-x" . counsel-M-x))
-
-  ;; from johnw's config
-  ;; :bind (("C-*"     . counsel-org-agenda-headlines)
-  ;;        ("C-x C-f" . counsel-find-file)
-  ;;        ("C-c e l" . counsel-find-library)
-  ;;        ("C-c e q" . counsel-set-variable)
-  ;;        ("C-h e l" . counsel-find-library)
-  ;;        ("C-h e u" . counsel-unicode-char)
-  ;;        ("C-h f"   . counsel-describe-function)
-  ;;        ("C-x r b" . counsel-bookmark)
-  ;;        ;; ("M-y"     . counsel-yank-pop)
-
-  ;;        ("M-s f" . counsel-file-jump)
-  ;;        ;; ("M-s g" . counsel-rg)
-  ;;        ("M-s j" . counsel-dired-jump))
-
   :commands counsel-minibuffer-history
   :init
   (bind-key "M-r" #'counsel-minibuffer-history minibuffer-local-map)
@@ -400,9 +291,6 @@
   :config
   (projectile-global-mode)
 
-  ;; TODO(mgsloan): Figure out what this is all about (from johnw's
-  ;; config)
-
   (defun my-projectile-invalidate-cache (&rest _args)
     ;; We ignore the args to `magit-checkout'.
     (projectile-invalidate-cache nil))
@@ -413,8 +301,6 @@
                    :after #'my-projectile-invalidate-cache)
        (advice-add 'magit-branch-and-checkout
                    :after #'my-projectile-invalidate-cache))))
-
-(use-package rainbow-delimiters)
 
 (use-package unfill)
 
@@ -457,96 +343,3 @@ With prefix arg, find the previous file."
            (pos (mod (+ (cl-position file files :test 'equal) (if backward -1 1))
                      (length files))))
       (find-file (nth pos files)))))
-
-;; Doesn't work well with multiple frames + non ideal efficiency
-;;
-;; (use-package keyfreq
-;;   :config
-;;   ;; Omit some things that get spammed
-;;   (setq keyfreq-excluded-commands
-;;         '(self-insert-command
-;;           mwheel-scroll
-;;           mouse-drag-region
-;;           mouse-set-point
-;;           ivy-done
-;;           evil-backward-paragraph
-;;           evil-forward-paragraph
-;;           evil-next-line
-;;           evil-previous-line))
-;;   (keyfreq-mode 1)
-;;   (keyfreq-autosave-mode 1))
-
-
-;; TODO:
-;;
-;; * Use which key? May not be needed.
-;;
-;; * Pick some other themes. Zenburn?
-;;
-;; * Use ido-switch-buffer for C-z like in my old conf?
-;;     (bind-key* "C-z" 'ido-switch-buffer)
-;;
-;; * Opt in to all keybindings via "(use-global-map
-;;   (make-sparse-keymap))"?
-;;
-;; * Revisit http://pragmaticemacs.com/emacs/easily-manage-emacs-workspaces-with-eyebrowse/
-;;
-;; * Choose between eyebrowse and persp.  Use projectile with persp?
-;;
-;; * Hippie expansion seems popular
-;;
-;; * evil-jumper
-;;
-;; * Figure out why there are borders around the frame. -ib and -bw don't solve it
-;;
-;; * Figure out why ivy-rich doesn't work for me
-;;
-;; * multiple cursors mode
-;;
-;; * persp-mode
-;;
-;; * swiper
-;;
-;; * ivy-avy
-;;
-;; * ivy-isearch
-;;
-;; * Revisit https://github.com/emacs-evil/evil/blob/master/evil-maps.el
-;;
-;; * Projectile search that opens result in other buffer
-;;
-;; * copy-as-format
-;;
-;; * Prevent numeric prefix of insertion, similar vim commands from
-;;   replicating affect.
-;;
-;; * habit of using evil-mc
-
-;; Things I never really started using, but might resurrect one day
-
-;; (use-package eyebrowse
-;;   :diminish eyebrowse-mode
-;;   :config
-;;   (eyebrowse-mode t))
-
-;; (use-package command-log-mode)
-
-;; (use-package evil-surround
-;;   :config
-;;   (global-evil-surround-mode 1))
-
-;; (use-package company)
-
-;; (use-package company-tabnine
-;;   :defer t
-;;   :init
-;;   (with-eval-after-load 'company
-;;     (add-to-list 'company-backends 'company-tabnine)))
-
-;; (use-package flycheck)
-
-;; (use-package crosshairs
-;;   :init
-;;   (bkevil "C-f" 'flash-crosshairs))
-
-;; (use-package elisp-format)

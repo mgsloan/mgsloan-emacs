@@ -1,11 +1,12 @@
 .#*
+/eln-cache
 /straight/build-cache.el
 /straight/build/
 /straight/modified/
 /var/
-todo.md
 
 # Repos populated by straight.el
 /straight/repos/emacsmirror-mirror
-/straight/repos/nongnu-elpa
+/straight/repos/gnu-elpa-mirror
 /straight/repos/melpa
+/straight/repos/nongnu-elpa

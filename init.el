@@ -28,10 +28,7 @@
   '("clipboard"
     "global"
     "git"
-    "haskell"
-    "rust"
-    "javascript"
-    "markdown")
+    "languages")
   "Configuration files that follow the ./foo.el file path format.")
 
 (setq emacs-config-dir (file-name-directory load-file-name))
@@ -50,3 +47,7 @@
 ;; Put custom-set-variables in a different file.
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
+
+;; Set user info
+(setq user-full-name "Michael Sloan"
+      user-mail-address "mgsloan@gmail.com")
