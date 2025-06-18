@@ -157,3 +157,15 @@
 [submodule "straight/repos/rust-mode"]
 	path = straight/repos/rust-mode
 	url = https://github.com/rust-lang/rust-mode.git
+[submodule "straight/repos/bind-key"]
+	path = straight/repos/bind-key
+	url = https://github.com/emacs-straight/bind-key.git
+[submodule "straight/repos/llama"]
+	path = straight/repos/llama
+	url = https://github.com/tarsius/llama.git
+[submodule "straight/repos/seq"]
+	path = straight/repos/seq
+	url = https://github.com/emacs-straight/seq.git
+[submodule "straight/repos/wfnames"]
+	path = straight/repos/wfnames
+	url = https://github.com/thierryvolpiatto/wfnames.git

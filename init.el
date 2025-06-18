@@ -18,6 +18,10 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
+;; Put custom-set-variables in a different file.
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
 ;; Different library files to load.
 (defvar libs
   '()
@@ -44,9 +48,6 @@
           (lambda () (magit-status-setup-buffer "~/zed/zed")
                      (switch-to-buffer (get-buffer "magit: zed"))))
 
-;; Put custom-set-variables in a different file.
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
 
 ;; Set user info
 (setq user-full-name "Michael Sloan"
