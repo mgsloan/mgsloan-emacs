@@ -43,6 +43,10 @@
 (loop for name in configs
       do (load (concat emacs-config-dir name ".el")))
 
+(add-hook 'emacs-startup-hook
+          (lambda () (magit-status-setup-buffer "~/zed/zed")
+                     (switch-to-buffer (get-buffer "magit: zed"))))
+
 ;; Put custom-set-variables in a different file.
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)

@@ -38,8 +38,12 @@
     (magit-git-string "log" "-1" "--format=%cr"))
   :config
   (add-hook 'git-commit-mode-hook 'evil-insert-state)
-  (add-hook 'git-diff-mode-hook #'my-wrap-lines)
-  (add-hook 'magit-mode-hook #'my-wrap-lines)
+  ; todo! these broke?
+  ; (add-hook 'git-diff-mode-hook #'my-wrap-lines)
+  ; (add-hook 'magit-mode-hook #'my-wrap-lines)
+  (add-hook 'git-commit-setup-hook 'turn-off-auto-fill
+            ;; append to end of git-commit-setup-hook to ensure this hook takes precedence.
+            t)
   (setq magit-repolist-columns '(("Name"     25 magit-repolist-column-ident                  ())
                                  ("D"         1 magit-repolist-column-dirty                  ())
                                  ("L<U"       3 magit-repolist-column-unpulled-from-upstream
@@ -70,11 +74,12 @@
                 ("~/proj/squarespace-escape-suppressor" . DEPTH0)
                 ("~/proj/todoist-shortcuts" . DEPTH0)
                 ("~/proj/unblock-with-intention" . DEPTH0))))
-  (evil-define-key 'motion magit-repolist-mode-map (kbd "g") 'tabulated-list-revert))
+  (evil-define-key 'motion magit-repolist-mode-map (kbd "g") 'tabulated-list-revert)
+  (magit-status-setup-buffer "~/zed/zed"))
 
-(defun my-wrap-lines ()
-  "Disable `truncate-lines' in the current buffer."
-  (setq truncate-lines nil))
+; (defun my-wrap-lines ()
+;  "Disable `truncate-lines' in the current buffer."
+;  (setq truncate-lines nil))
 
 (if (mgsloan-repo-list)
     (setq initial-buffer-choice 'list-repos))

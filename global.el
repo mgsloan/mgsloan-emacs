@@ -6,7 +6,7 @@
 (setq frame-title-format `((buffer-file-name "%f" "%b")," - Emacs"))
 
 (with-demoted-errors "Error while setting font: %S"
-  (set-frame-font (if (getenv "HIDPI") "Hack 16" "Hack 10") nil t))
+  (set-frame-font (if (getenv "HIDPI") "Hack 10" "Hack 10") nil t))
 
 ;; Newline at end of file, trim trailing whitespace
 (setq require-final-newline t)
@@ -132,19 +132,19 @@
   (define-key evil-visual-state-map (kbd "y") 'my-evil-yank)
   (bkevil "M-p" 'my-paste-from-xclipboard)
 
-  ;; This is probably not the idiomatic way to do this, but it works!
-  (defun my-return ()
-    (interactive)
-    (cond
-     ((eq major-mode 'dired-mode) (call-interactively 'dired-find-file))
-     ((eq major-mode 'magit-repolist-mode) (call-interactively 'magit-repolist-status))
-     ((t) (call-interactively 'avy-goto-word-1))))
-  ;; Can also be used in any mode via menu button, but not all my
-  ;; keyboards have one.
-  (define-key evil-normal-state-map (kbd "<return>") 'my-return)
-  (define-key evil-visual-state-map (kbd "<return>") 'my-return)
-  (define-key evil-normal-state-map (kbd "C-<return>") 'avy-goto-char-2)
-  (define-key evil-visual-state-map (kbd "C-<return>") 'avy-goto-char-2)
+  ;; ;; This is probably not the idiomatic way to do this, but it works!
+  ;; (defun my-return ()
+  ;;   (interactive)
+  ;;   (cond
+  ;;    ((eq major-mode 'dired-mode) (call-interactively 'dired-find-file))
+  ;;    ((eq major-mode 'magit-repolist-mode) (call-interactively 'magit-repolist-status))
+  ;;    ((t) (call-interactively 'avy-goto-word-1))))
+  ;; ;; Can also be used in any mode via menu button, but not all my
+  ;; ;; keyboards have one.
+  ;; (define-key evil-normal-state-map (kbd "<return>") 'my-return)
+  ;; (define-key evil-visual-state-map (kbd "<return>") 'my-return)
+  ;; (define-key evil-normal-state-map (kbd "C-<return>") 'avy-goto-char-2)
+  ;; (define-key evil-visual-state-map (kbd "C-<return>") 'avy-goto-char-2)
 
   ;; Make word / search include underscores in symbols.
   ;; (modify-syntax-entry ?_ "w")
