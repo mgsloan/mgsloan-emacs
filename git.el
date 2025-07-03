@@ -75,7 +75,34 @@
                 ("~/proj/todoist-shortcuts" . DEPTH0)
                 ("~/proj/unblock-with-intention" . DEPTH0))))
   (evil-define-key 'motion magit-repolist-mode-map (kbd "g") 'tabulated-list-revert)
-  (magit-status-setup-buffer "~/zed/zed"))
+  (magit-status-setup-buffer "~/zed/zed")
+  :config
+  (defun magit-add-unstaged-to-misc ()
+    "Run `add-unstaged-to-misc` in the current Magit repository directory."
+    (interactive)
+    (let ((repo-dir (magit-toplevel)))
+      (if repo-dir
+          (let ((default-directory repo-dir))
+            (async-shell-command "~/.local/bin/zed-dev/add-unstaged-to-misc"))
+        (message "Not in a Git repository"))))
+  (defun magit-add-unstaged-to-todo()
+    "Run `add-unstaged-to-todo` in the current Magit repository directory."
+    (interactive)
+    (let ((repo-dir (magit-toplevel)))
+      (if repo-dir
+          (let ((default-directory repo-dir))
+            ;; Replace this with your specific CLI command
+            (async-shell-command "~/.local/bin/zed-dev/add-unstaged-to-todo"))
+        (message "Not in a Git repository"))))
+  (defun magit-run-branch-cleaner()
+    "Run `local-branch-cleaner` in the current Magit repository directory."
+    (interactive)
+    (let ((repo-dir (magit-toplevel)))
+      (if repo-dir
+          (let ((default-directory repo-dir))
+            ;; Replace this with your specific CLI command
+            (async-shell-command "~/proj/local-branch-cleaner/start.sh"))
+        (message "Not in a Git repository")))))
 
 ; (defun my-wrap-lines ()
 ;  "Disable `truncate-lines' in the current buffer."
