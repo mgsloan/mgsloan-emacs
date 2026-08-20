@@ -116,8 +116,12 @@ dependencies rather than things worth seeing in the repo list."
     (magit-git-string "log" "-1" "--format=%cr"))
   :config
   (add-hook 'git-commit-mode-hook 'evil-insert-state)
-  (add-hook 'git-diff-mode-hook #'my-wrap-lines)
-  (add-hook 'magit-mode-hook #'my-wrap-lines)
+  ; todo! these broke?
+  ; (add-hook 'git-diff-mode-hook #'my-wrap-lines)
+  ; (add-hook 'magit-mode-hook #'my-wrap-lines)
+  (add-hook 'git-commit-setup-hook 'turn-off-auto-fill
+            ;; append to end of git-commit-setup-hook to ensure this hook takes precedence.
+            t)
   (setq magit-repolist-columns '(("Name"     25 magit-repolist-column-ident                  ())
                                  ("D"         1 magit-repolist-column-flag                   ())
                                  ("L<U"       3 magit-repolist-column-unpulled-from-upstream
@@ -136,11 +140,42 @@ dependencies rather than things worth seeing in the repo list."
     (advice-add 'magit-list-repos :before
                 #'my-refresh-magit-repository-directories)
     (my-refresh-magit-repository-directories))
-  (evil-define-key 'motion magit-repolist-mode-map (kbd "g") 'tabulated-list-revert))
+  (evil-define-key 'motion magit-repolist-mode-map (kbd "g") 'tabulated-list-revert)
+  ;; Merge note: the other branch ran (magit-status-setup-buffer "~/zed/zed")
+  ;; here.  That path no longer exists - the repo is at ~/proj/zed now - and
+  ;; this runs at load time, so it would break the whole magit block.  Left
+  ;; disabled until it is clear whether it is still wanted.
+  ;; (magit-status-setup-buffer "~/proj/zed")
+  (defun magit-add-unstaged-to-misc ()
+    "Run `add-unstaged-to-misc` in the current Magit repository directory."
+    (interactive)
+    (let ((repo-dir (magit-toplevel)))
+      (if repo-dir
+          (let ((default-directory repo-dir))
+            (async-shell-command "~/.local/bin/zed-dev/add-unstaged-to-misc"))
+        (message "Not in a Git repository"))))
+  (defun magit-add-unstaged-to-todo()
+    "Run `add-unstaged-to-todo` in the current Magit repository directory."
+    (interactive)
+    (let ((repo-dir (magit-toplevel)))
+      (if repo-dir
+          (let ((default-directory repo-dir))
+            ;; Replace this with your specific CLI command
+            (async-shell-command "~/.local/bin/zed-dev/add-unstaged-to-todo"))
+        (message "Not in a Git repository"))))
+  (defun magit-run-branch-cleaner()
+    "Run `local-branch-cleaner` in the current Magit repository directory."
+    (interactive)
+    (let ((repo-dir (magit-toplevel)))
+      (if repo-dir
+          (let ((default-directory repo-dir))
+            ;; Replace this with your specific CLI command
+            (async-shell-command "~/proj/local-branch-cleaner/start.sh"))
+        (message "Not in a Git repository")))))
 
-(defun my-wrap-lines ()
-  "Disable `truncate-lines' in the current buffer."
-  (setq truncate-lines nil))
+; (defun my-wrap-lines ()
+;  "Disable `truncate-lines' in the current buffer."
+;  (setq truncate-lines nil))
 
 (if (mgsloan-repo-list)
     (setq initial-buffer-choice 'list-repos))

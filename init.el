@@ -18,6 +18,10 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
+;; Put custom-set-variables in a different file.
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
 ;; Different library files to load.
 (defvar libs
   '()
@@ -28,10 +32,7 @@
   '("clipboard"
     "global"
     "git"
-    "haskell"
-    "rust"
-    "javascript"
-    "markdown")
+    "languages")
   "Configuration files that follow the ./foo.el file path format.")
 
 (setq emacs-config-dir (file-name-directory load-file-name))
@@ -43,6 +44,11 @@
 (loop for name in configs
       do (load (concat emacs-config-dir name ".el")))
 
-;; Put custom-set-variables in a different file.
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
+(add-hook 'emacs-startup-hook
+          (lambda () (magit-status-setup-buffer "~/zed/zed")
+                     (switch-to-buffer (get-buffer "magit: zed"))))
+
+
+;; Set user info
+(setq user-full-name "Michael Sloan"
+      user-mail-address "mgsloan@gmail.com")
