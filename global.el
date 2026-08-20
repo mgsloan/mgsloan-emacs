@@ -188,12 +188,51 @@
   ;;  '(avy-lead-face-2 ((t (:foreground "#00ff00" :background "#ff0000")))))
   )
 
+;; Start out dark, so that if the system theme detection below fails or is
+;; unavailable, we end up dark rather than in emacs's default light theme.
+(load-theme 'spacemacs-dark t)
+
+(defun my-gsettings-get (key)
+  "Value of the org.gnome.desktop.interface KEY, downcased, or nil on failure."
+  (ignore-errors
+    (with-temp-buffer
+      (when (eq 0 (call-process "gsettings" nil t nil
+                                "get" "org.gnome.desktop.interface" key))
+        (downcase (string-trim (buffer-string)))))))
+
+(defun my-system-dark-mode-p ()
+  "Non-nil if the system prefers a dark theme.
+
+auto-dark wants to read this from the xdg-desktop-portal Settings
+interface, which isn't implemented here - the read just errors,
+and auto-dark quietly reports that as \"light\".  So ask gsettings
+instead, and assume dark whenever the answer isn't a clear
+\"light\"."
+  (let ((scheme (my-gsettings-get "color-scheme")))
+    (cond
+     ((null scheme) t)
+     ((string-match-p "dark" scheme) t)
+     ((string-match-p "light" scheme) nil)
+     ;; "default" means no stated preference, so go by the gtk theme's name.
+     (t (let ((gtk (my-gsettings-get "gtk-theme")))
+          (or (null gtk) (string-match-p "dark" gtk)))))))
+
 (use-package auto-dark
   :init
   (setq auto-dark-dark-theme 'spacemacs-dark)
   (setq auto-dark-light-theme 'spacemacs-light)
   (setq auto-dark-polling-interval-seconds 5)
-  :config (auto-dark-mode t))
+  ;; Anything other than 'dbus, so that auto-dark polls on a timer rather
+  ;; than subscribing to portal signals that never arrive.  Setting it also
+  ;; skips auto-dark's own detection method probing.
+  (setq auto-dark-detection-method 'gsettings-polling)
+  (advice-add 'auto-dark--is-dark-mode :override #'my-system-dark-mode-p)
+  :config
+  (condition-case err
+      (auto-dark-mode t)
+    (error
+     (message "auto-dark: failed to enable (%S), staying dark" err)
+     (load-theme 'spacemacs-dark t))))
 
 (use-package spaceline
   :after (winum eyebrowse)
