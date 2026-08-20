@@ -141,11 +141,6 @@ dependencies rather than things worth seeing in the repo list."
                 #'my-refresh-magit-repository-directories)
     (my-refresh-magit-repository-directories))
   (evil-define-key 'motion magit-repolist-mode-map (kbd "g") 'tabulated-list-revert)
-  ;; Merge note: the other branch ran (magit-status-setup-buffer "~/zed/zed")
-  ;; here.  That path no longer exists - the repo is at ~/proj/zed now - and
-  ;; this runs at load time, so it would break the whole magit block.  Left
-  ;; disabled until it is clear whether it is still wanted.
-  ;; (magit-status-setup-buffer "~/proj/zed")
   (defun magit-add-unstaged-to-misc ()
     "Run `add-unstaged-to-misc` in the current Magit repository directory."
     (interactive)
@@ -154,14 +149,14 @@ dependencies rather than things worth seeing in the repo list."
           (let ((default-directory repo-dir))
             (async-shell-command "~/.local/bin/zed-dev/add-unstaged-to-misc"))
         (message "Not in a Git repository"))))
-  (defun magit-add-unstaged-to-todo()
-    "Run `add-unstaged-to-todo` in the current Magit repository directory."
+  (defun magit-add-unstaged-to-todos ()
+    "Run `add-unstaged-to-todos` in the current Magit repository directory."
     (interactive)
     (let ((repo-dir (magit-toplevel)))
       (if repo-dir
           (let ((default-directory repo-dir))
             ;; Replace this with your specific CLI command
-            (async-shell-command "~/.local/bin/zed-dev/add-unstaged-to-todo"))
+            (async-shell-command "~/.local/bin/zed-dev/add-unstaged-to-todos"))
         (message "Not in a Git repository"))))
   (defun magit-run-branch-cleaner()
     "Run `local-branch-cleaner` in the current Magit repository directory."
@@ -170,7 +165,7 @@ dependencies rather than things worth seeing in the repo list."
       (if repo-dir
           (let ((default-directory repo-dir))
             ;; Replace this with your specific CLI command
-            (async-shell-command "~/proj/local-branch-cleaner/start.sh"))
+            (async-shell-command "~/proj/utils/local-branch-cleaner/start.sh"))
         (message "Not in a Git repository")))))
 
 ; (defun my-wrap-lines ()
