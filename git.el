@@ -1,10 +1,88 @@
 (defun mgsloan-repo-list ()
   (and (string= user-login-name "mgsloan")
-       (or (string= system-name "treetop")
-           (string= system-name "machine"))
        ;; When GIT_DIR is set, repo list won't work
        (not (getenv "GIT_DIR"))
        (not (getenv "SUPPRESS_REPO_LIST"))))
+
+;; The repo list used to be a literal list of paths, which went stale every time
+;; ~/proj got reorganized. Instead, generate it from the filesystem: the home
+;; repo's submodules, everything under ~/proj, and a couple of fixed entries.
+
+(defvar my-repo-scan-roots '("~/proj")
+  "Directories scanned recursively for git repositories.")
+
+(defvar my-repo-extra-dirs '("~/docs" "~/.emacs.d")
+  "Git repositories always included in `magit-repository-directories'.")
+
+(defvar my-repo-scan-max-depth 4
+  "How far below a `my-repo-scan-roots' entry to look for repositories.")
+
+(defvar my-repo-scan-prune-names
+  '(".git" "node_modules" ".stack-work" "dist-newstyle" "target")
+  "Directory names never descended into while scanning for repositories.
+These are all build/dependency dirs, and skipping them is what keeps the
+scan cheap - an unbounded walk of ~/proj visits over 400k directories.")
+
+(defun my-git-repo-p (dir)
+  "Whether DIR is the root of a git repository."
+  (file-exists-p (expand-file-name ".git" dir)))
+
+(defun my-git-submodule-paths (dir)
+  "Absolute paths of the submodules declared in DIR's .gitmodules.
+
+Parsed directly rather than via `git config -f' so that this costs no
+subprocess, and so that it works regardless of GIT_DIR - which matters
+for the home directory repo, whose git dir is ~/.home.git."
+  (let ((file (expand-file-name ".gitmodules" dir))
+        paths)
+    (when (file-readable-p file)
+      (with-temp-buffer
+        (insert-file-contents file)
+        (goto-char (point-min))
+        (while (re-search-forward "^[ \t]*path[ \t]*=[ \t]*\\(.+?\\)[ \t]*$" nil t)
+          (push (expand-file-name (match-string 1) dir) paths))))
+    (nreverse paths)))
+
+(defun my-scan-repo-dirs (root)
+  "Git repositories at most `my-repo-scan-max-depth' below ROOT.
+
+Descends past a repository to find ones nested inside it, but skips any
+nested repository listed in its parent's .gitmodules - those are vendored
+dependencies rather than things worth seeing in the repo list."
+  (let (repos)
+    (letrec
+        ((walk
+          (lambda (dir depth skip)
+            (unless (member dir skip)
+              (when (my-git-repo-p dir)
+                (push dir repos)
+                (setq skip (append (my-git-submodule-paths dir) skip)))
+              (when (> depth 0)
+                (dolist (f (ignore-errors
+                             (directory-files
+                              dir t directory-files-no-dot-files-regexp t)))
+                  (when (and (file-directory-p f)
+                             (not (file-symlink-p f))
+                             (not (member (file-name-nondirectory f)
+                                          my-repo-scan-prune-names)))
+                    (funcall walk f (1- depth) skip))))))))
+      (funcall walk (directory-file-name (expand-file-name root))
+               my-repo-scan-max-depth nil))
+    repos))
+
+(defun my-magit-repository-directories ()
+  "Value for `magit-repository-directories', generated from the filesystem."
+  (let ((dirs (append (my-git-submodule-paths "~")
+                      (mapcan #'my-scan-repo-dirs my-repo-scan-roots)
+                      (mapcar (lambda (d)
+                                (directory-file-name (expand-file-name d)))
+                              my-repo-extra-dirs))))
+    (mapcar (lambda (dir) (cons dir 0))
+            (sort (delete-dups (seq-filter #'my-git-repo-p dirs)) #'string<))))
+
+(defun my-refresh-magit-repository-directories (&rest _)
+  "Regenerate `magit-repository-directories'."
+  (setq magit-repository-directories (my-magit-repository-directories)))
 
 (use-package
   magit
@@ -51,25 +129,13 @@
                                   ((:right-align t)))
                                  ("Branch"   10 magit-repolist-column-branch                 ())
                                  ("Path"     99 magit-repolist-column-path                   ())))
-  (if (mgsloan-repo-list)
-      (setq magit-repository-directories
-            ;; WIP attempt at tracking all proj
-            ;; (map (lambda (path) (cons path 'DEPTH0))
-            ;;      (seq-filter (lambda (path) (file-exists-p (concat path "/.git")))
-            ;;                  (directory-files "~/proj/" t directory-files-no-dot-files-regexp)))
-              `(("~/.emacs.d" . DEPTH0)
-                ("~/oss/store" . DEPTH0)
-                ("~/oss/th-orphans" . DEPTH0)
-                ("~/oss/th-utilities" . DEPTH0)
-                ("~/docs" . DEPTH0)
-                ("~/proj/gmail-label-switch-shortcuts" . DEPTH0)
-                ("~/proj/mariana-tek-to-gcal" . DEPTH0)
-                ("~/proj/roam-navigator" . DEPTH0)
-                ("~/proj/site" . DEPTH0)
-                ("~/proj/site/draft" . DEPTH0)
-                ("~/proj/squarespace-escape-suppressor" . DEPTH0)
-                ("~/proj/todoist-shortcuts" . DEPTH0)
-                ("~/proj/unblock-with-intention" . DEPTH0))))
+  (when (mgsloan-repo-list)
+    ;; `magit-list-repos' is the one place both the repo list buffer (initial
+    ;; display and `g' refresh) and `magit-status' read this variable through,
+    ;; so regenerating here keeps every consumer up to date.
+    (advice-add 'magit-list-repos :before
+                #'my-refresh-magit-repository-directories)
+    (my-refresh-magit-repository-directories))
   (evil-define-key 'motion magit-repolist-mode-map (kbd "g") 'tabulated-list-revert))
 
 (defun my-wrap-lines ()
