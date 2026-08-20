@@ -119,7 +119,7 @@ dependencies rather than things worth seeing in the repo list."
   (add-hook 'git-diff-mode-hook #'my-wrap-lines)
   (add-hook 'magit-mode-hook #'my-wrap-lines)
   (setq magit-repolist-columns '(("Name"     25 magit-repolist-column-ident                  ())
-                                 ("D"         1 magit-repolist-column-dirty                  ())
+                                 ("D"         1 magit-repolist-column-flag                   ())
                                  ("L<U"       3 magit-repolist-column-unpulled-from-upstream
                                   ((:right-align t)))
                                  ("L>U"       3 magit-repolist-column-unpushed-to-upstream
