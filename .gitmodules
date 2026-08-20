@@ -154,3 +154,6 @@
 [submodule "straight/repos/auto-dark-emacs"]
 	path = straight/repos/auto-dark-emacs
 	url = https://github.com/LionyxML/auto-dark-emacs
+[submodule "straight/repos/rust-mode"]
+	path = straight/repos/rust-mode
+	url = https://github.com/rust-lang/rust-mode.git
