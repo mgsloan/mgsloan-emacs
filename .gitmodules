@@ -1,6 +1,3 @@
-[submodule "straight/repos/circadian.el"]
-	path = straight/repos/circadian.el
-	url = https://github.com/GuidoSchmidt/circadian.el.git
 [submodule "straight/repos/straight.el"]
 	path = straight/repos/straight.el
 	url = https://github.com/raxod502/straight.el.git
