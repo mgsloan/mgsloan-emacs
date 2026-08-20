@@ -31,9 +31,6 @@
 [submodule "straight/repos/dash.el"]
 	path = straight/repos/dash.el
 	url = https://github.com/magnars/dash.el.git
-[submodule "straight/repos/persp-mode.el"]
-	path = straight/repos/persp-mode.el
-	url = https://github.com/Bad-ptr/persp-mode.el.git
 [submodule "straight/repos/spacemacs-theme"]
 	path = straight/repos/spacemacs-theme
 	url = https://github.com/mgsloan/spacemacs-theme.git
@@ -53,27 +50,12 @@
 [submodule "straight/repos/with-editor"]
 	path = straight/repos/with-editor
 	url = https://github.com/magit/with-editor.git
-[submodule "straight/repos/emacs-helm-ag"]
-	path = straight/repos/emacs-helm-ag
-	url = https://github.com/syohex/emacs-helm-ag.git
 [submodule "straight/repos/general.el"]
 	path = straight/repos/general.el
 	url = https://github.com/noctuid/general.el.git
 [submodule "straight/repos/git-link"]
 	path = straight/repos/git-link
 	url = https://github.com/sshaw/git-link.git
-[submodule "straight/repos/emacs-racer"]
-	path = straight/repos/emacs-racer
-	url = https://github.com/racer-rust/emacs-racer.git
-[submodule "straight/repos/f.el"]
-	path = straight/repos/f.el
-	url = https://github.com/rejeep/f.el.git
-[submodule "straight/repos/pos-tip"]
-	path = straight/repos/pos-tip
-	url = https://github.com/pitkali/pos-tip.git
-[submodule "straight/repos/flycheck-rust"]
-	path = straight/repos/flycheck-rust
-	url = https://github.com/flycheck/flycheck-rust.git
 [submodule "straight/repos/undo-tree"]
 	path = straight/repos/undo-tree
 	url = https://github.com/emacs-straight/undo-tree.git

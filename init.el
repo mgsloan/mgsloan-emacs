@@ -1,4 +1,4 @@
-(require 'cl)
+(require 'cl-lib)
 
 ;; Bootstrap straight.el
 (defvar bootstrap-version)
@@ -38,15 +38,11 @@
 (setq emacs-config-dir (file-name-directory load-file-name))
 (setq emacs-lib-dir (concat emacs-config-dir "lib/"))
 
-(loop for name in libs
-      do (load (concat emacs-lib-dir name ".el")))
+(dolist (name libs)
+  (load (concat emacs-lib-dir name ".el")))
 
-(loop for name in configs
-      do (load (concat emacs-config-dir name ".el")))
-
-(add-hook 'emacs-startup-hook
-          (lambda () (magit-status-setup-buffer "~/zed/zed")
-                     (switch-to-buffer (get-buffer "magit: zed"))))
+(dolist (name configs)
+  (load (concat emacs-config-dir name ".el")))
 
 
 ;; Set user info
