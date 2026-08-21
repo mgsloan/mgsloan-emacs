@@ -45,8 +45,7 @@
 	url = https://github.com/magnars/s.el.git
 [submodule "straight/repos/magit"]
 	path = straight/repos/magit
-	url = https://github.com/mgsloan/magit.git
-	branch = mgsloan-changes
+	url = https://github.com/magit/magit.git
 [submodule "straight/repos/with-editor"]
 	path = straight/repos/with-editor
 	url = https://github.com/magit/with-editor.git

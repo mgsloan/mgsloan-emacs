@@ -1,7 +1,167 @@
+;;; Home dotfiles repo
+;;
+;; ~/.home.git is the git dir for a repo whose work tree is $HOME, and there is
+;; deliberately no ~/.git - a plain `git' run under $HOME must not find it (see
+;; ~/env/home-dir-git.md).  Setting GIT_DIR process-wide, as the old `edit_cfg'
+;; script did, makes it findable but leaves Emacs unable to open any other repo,
+;; and requires patching `magit-startup-asserts', which exists to prevent
+;; exactly that.  Instead, inject the vars per git invocation, for the
+;; directories that belong to the repo.
+;;
+;; `magit-process-environment' is the single chokepoint: every git subprocess
+;; magit runs, synchronous and asynchronous alike, gets its environment from
+;; there.
+
+(defconst my-home-work-tree (file-name-as-directory (expand-file-name "~")))
+(defconst my-home-git-dir   (expand-file-name ".home.git/" my-home-work-tree))
+(defconst my-home-env-dir   (expand-file-name "env/" my-home-work-tree))
+
+(defconst my-home-repo-name "env"
+  "What to call the home repo wherever magit displays a repository name.
+Its actual basename is the username, which is meaningless in a repo list.")
+
+(defvar my-home-repo--tracked-dirs nil
+  "Hash table of every directory containing tracked home-repo content.")
+
+(defun my-home-repo-tracked-dirs (&optional refresh)
+  "Directories that contain content tracked by the home dotfiles repo.
+Built from a single `git ls-files' and cached, so that
+`my-home-repo-dir-p' costs no subprocess."
+  (when (or refresh (null my-home-repo--tracked-dirs))
+    (let ((table (make-hash-table :test #'equal))
+          (default-directory my-home-work-tree))
+      ;; Deliberately `call-process' with explicit flags rather than any magit
+      ;; function, so this can never recurse back into `my-home-repo-dir-p'.
+      (with-temp-buffer
+        (when (eq 0 (call-process "git" nil t nil
+                                  (concat "--git-dir=" my-home-git-dir)
+                                  (concat "--work-tree=" my-home-work-tree)
+                                  "ls-files" "-z"))
+          (dolist (file (split-string (buffer-string) "\0" t))
+            (let ((dir (file-name-directory
+                        (expand-file-name file my-home-work-tree))))
+              (while (and dir (>= (length dir) (length my-home-work-tree)))
+                (puthash dir t table)
+                (setq dir (file-name-directory (directory-file-name dir))))))))
+      (setq my-home-repo--tracked-dirs table)))
+  my-home-repo--tracked-dirs)
+
+(defun my-home-repo-refresh ()
+  "Rescan which directories the home dotfiles repo tracks.
+Needed after tracking a new top-level entry outside env/."
+  (interactive)
+  (my-home-repo-tracked-dirs t))
+
+(defun my-home-repo--no-nearer-git-p (dir)
+  "Whether no `.git' exists at or above DIR, stopping at $HOME.
+`file-exists-p' follows symlinks, which is what we want: a symlinked-in
+checkout is recognized as its own repository."
+  (let ((d dir))
+    (catch 'found
+      (while (> (length d) (length my-home-work-tree))
+        (when (file-exists-p (expand-file-name ".git" d))
+          (throw 'found nil))
+        (setq d (file-name-directory (directory-file-name d))))
+      t)))
+
+(defun my-home-repo-dir-p (dir)
+  "Whether git run in DIR should be pointed at the home dotfiles repo."
+  (and (stringp dir)
+       ;; Must come first: `magit-process-environment' returns early for remote
+       ;; directories, and a local GIT_DIR would break every Tramp git call.
+       (not (file-remote-p dir))
+       (let ((dir (file-name-as-directory (expand-file-name dir))))
+         (cond
+          ;; The control directory and everything under it.  Required for
+          ;; committing and rebasing to work at all: COMMIT_EDITMSG, MERGE_MSG
+          ;; and git-rebase-todo buffers have their `default-directory' here.
+          ((string-prefix-p my-home-git-dir dir) t)
+          ((not (string-prefix-p my-home-work-tree dir)) nil)
+          ;; A real repo nested under $HOME always wins - ~/.emacs.d, ~/proj/*,
+          ;; and this repo's own submodules.
+          ((not (my-home-repo--no-nearer-git-p dir)) nil)
+          ;; Under env/, untracked files and brand-new directories count too, so
+          ;; that a freshly created env/foo/bar.sh is stageable right away.
+          ((string-prefix-p my-home-env-dir dir) t)
+          ;; Elsewhere require tracked content, so that ~/proj, ~/dl and friends
+          ;; keep reporting no repository, exactly as they do without any of
+          ;; this.  $HOME itself qualifies, being an ancestor of every file.
+          (t (and (gethash dir (my-home-repo-tracked-dirs)) t))))))
+
+(defun my-home-repo-toplevel-p (dir)
+  "Whether DIR is the home dotfiles repo's work tree root."
+  (and (stringp dir)
+       (equal (file-name-as-directory (expand-file-name dir))
+              my-home-work-tree)))
+
+(defun my-home-git-environment (env)
+  "Point ENV at the home dotfiles repo when `default-directory' belongs to it.
+Both vars are injected: `core.worktree' is deliberately not set in
+~/.home.git/config, so that a stray GIT_DIR with the wrong working
+directory still fails loudly rather than operating on all of $HOME."
+  (if (my-home-repo-dir-p default-directory)
+      (cons (concat "GIT_DIR=" my-home-git-dir)
+            (cons (concat "GIT_WORK_TREE=" my-home-work-tree) env))
+    env))
+
+;; `magit-list-repos-1' requires a readable <dir>/.git, so the home repo cannot
+;; be expressed through `magit-repository-directories' at any depth.
+(defun my-magit-list-repos-add-home (repos)
+  (if (file-directory-p my-home-git-dir)
+      (cons my-home-work-tree repos)
+    repos))
+
+;; Magit names a repo after the basename of its toplevel, which for the home
+;; repo is the username.  Rename it in the three places that show it: the repo
+;; list, `magit-status' completion, and buffer names.
+(defun my-magit-repolist-column-ident (spec)
+  (if (my-home-repo-toplevel-p default-directory)
+      my-home-repo-name
+    (magit-repolist-column-ident spec)))
+
+(defun my-magit-repos-alist-rename-home (alist)
+  (mapcar (lambda (cell)
+            (if (my-home-repo-toplevel-p (cdr cell))
+                (cons my-home-repo-name (cdr cell))
+              cell))
+          alist))
+
+(defun my-magit-generate-buffer-name (mode &optional value)
+  "Like `magit-generate-buffer-name-default-function', but name the home repo.
+Mirrors that function rather than advising it, because the repository
+name is baked into `magit-buffer-name-format' expansion."
+  (if (my-home-repo-toplevel-p default-directory)
+      (let ((m (substring (symbol-name mode) 0 -5))
+            (v (and value (format "%s" (ensure-list value)))))
+        (format-spec magit-buffer-name-format
+                     `((?m . ,m)
+                       (?M . ,(if (eq mode 'magit-status-mode) "magit" m))
+                       (?v . ,(or v ""))
+                       (?V . ,(if v (concat " " v) ""))
+                       (?t . ,my-home-repo-name)
+                       (?x . ,(if magit-uniquify-buffer-names "" "*")))))
+    (magit-generate-buffer-name-default-function mode value)))
+
+(defun my-magit-repolist-column-branch (_id)
+  "Like `magit-repolist-column-branch', but not fooled by a separate gitdir.
+The upstream `.git' check keeps an unpopulated submodule from reporting
+its parent's branch; the home repo has no `.git' but is populated."
+  (if (or (file-exists-p ".git")
+          (my-home-repo-dir-p default-directory))
+      (let ((branch (magit-get-current-branch)))
+        (if (member branch magit-main-branch-names)
+            (magit--propertize-face branch 'shadow)
+          branch))
+    (magit--propertize-face "(unpopulated)" 'warning)))
+
+(defun my-magit-mark-home-repo ()
+  "Make the home dotfiles repo's status buffer unmistakable."
+  (when (my-home-repo-toplevel-p default-directory)
+    (setq header-line-format
+          (propertize " HOME DOTFILES REPO " 'face 'warning))))
+
 (defun mgsloan-repo-list ()
   (and (string= user-login-name "mgsloan")
-       ;; When GIT_DIR is set, repo list won't work
-       (not (getenv "GIT_DIR"))
        (not (getenv "SUPPRESS_REPO_LIST"))))
 
 ;; The repo list used to be a literal list of paths, which went stale every time
@@ -115,6 +275,12 @@ dependencies rather than things worth seeing in the repo list."
     "timestamp relative to current time"
     (magit-git-string "log" "-1" "--format=%cr"))
   :config
+  ;; Home dotfiles repo: see the section at the top of this file.
+  (advice-add 'magit-process-environment :filter-return #'my-home-git-environment)
+  (advice-add 'magit-list-repos :filter-return #'my-magit-list-repos-add-home)
+  (advice-add 'magit-repos-alist :filter-return #'my-magit-repos-alist-rename-home)
+  (setq magit-generate-buffer-name-function #'my-magit-generate-buffer-name)
+  (add-hook 'magit-status-mode-hook #'my-magit-mark-home-repo)
   (add-hook 'git-commit-mode-hook 'evil-insert-state)
   ; todo! these broke?
   ; (add-hook 'git-diff-mode-hook #'my-wrap-lines)
@@ -122,7 +288,7 @@ dependencies rather than things worth seeing in the repo list."
   (add-hook 'git-commit-setup-hook 'turn-off-auto-fill
             ;; append to end of git-commit-setup-hook to ensure this hook takes precedence.
             t)
-  (setq magit-repolist-columns '(("Name"     25 magit-repolist-column-ident                  ())
+  (setq magit-repolist-columns '(("Name"     25 my-magit-repolist-column-ident               ())
                                  ("D"         1 magit-repolist-column-flag                   ())
                                  ("L<U"       3 magit-repolist-column-unpulled-from-upstream
                                   ((:right-align t)))
@@ -131,7 +297,7 @@ dependencies rather than things worth seeing in the repo list."
                                  ("Date"     14 magit-repolist-column-iso-date               ())
                                  ("Modified" 16 magit-repolist-column-relative-date
                                   ((:right-align t)))
-                                 ("Branch"   10 magit-repolist-column-branch                 ())
+                                 ("Branch"   10 my-magit-repolist-column-branch              ())
                                  ("Path"     99 magit-repolist-column-path                   ())))
   (when (mgsloan-repo-list)
     ;; `magit-list-repos' is the one place both the repo list buffer (initial
@@ -299,7 +465,14 @@ Point does not move."
 
 (use-package git-link
   :config
-  (setq git-link-use-commit t))
+  (setq git-link-use-commit t)
+  ;; git-link shells out directly rather than through magit, so it needs the
+  ;; home dotfiles repo's environment injected separately.
+  (advice-add 'git-link--exec :around
+              (lambda (fn &rest args)
+                (let ((process-environment
+                       (my-home-git-environment process-environment)))
+                  (apply fn args)))))
 
 (use-package smeargle)
 
