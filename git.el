@@ -111,26 +111,48 @@ directory still fails loudly rather than operating on all of $HOME."
       (cons my-home-work-tree repos)
     repos))
 
-;; Magit names a repo after the basename of its toplevel, which for the home
-;; repo is the username.  Rename it in the three places that show it: the repo
-;; list, `magit-status' completion, and buffer names.
-(defun my-magit-repolist-column-ident (spec)
-  (if (my-home-repo-toplevel-p default-directory)
-      my-home-repo-name
-    (magit-repolist-column-ident spec)))
+(defvar my-repo-qualified-name-roots '("~/cozy")
+  "Roots whose repositories are named \"<root>/<repo>\" instead of \"<repo>\".
+Bare basenames like \"code\", \"home\" and \"site\" say nothing about
+which project they belong to, and collide with repositories elsewhere.")
 
-(defun my-magit-repos-alist-rename-home (alist)
+;; Magit names a repo after the basename of its toplevel, which for the home
+;; repo is the username, and for the repos under `my-repo-qualified-name-roots'
+;; is ambiguous.  Rename them in the three places the name shows up: the repo
+;; list, `magit-status' completion, and buffer names.
+(defun my-magit-repo-display-name (dir)
+  "Name to show for the repository whose toplevel is DIR.
+Returns nil when magit's own name - DIR's basename - is fine."
+  (and (stringp dir)
+       (let ((dir (file-name-as-directory (expand-file-name dir))))
+         (cond
+          ((my-home-repo-toplevel-p dir) my-home-repo-name)
+          ((seq-some
+            (lambda (root)
+              (let* ((root (file-name-as-directory (expand-file-name root)))
+                     (rel (and (string-prefix-p root dir)
+                               (directory-file-name (substring dir (length root))))))
+                (and rel (not (equal rel ""))
+                     (concat (file-name-nondirectory (directory-file-name root))
+                             "/" rel))))
+            my-repo-qualified-name-roots))))))
+
+(defun my-magit-repolist-column-ident (spec)
+  (or (my-magit-repo-display-name default-directory)
+      (magit-repolist-column-ident spec)))
+
+(defun my-magit-repos-alist-rename (alist)
   (mapcar (lambda (cell)
-            (if (my-home-repo-toplevel-p (cdr cell))
-                (cons my-home-repo-name (cdr cell))
+            (if-let* ((name (my-magit-repo-display-name (cdr cell))))
+                (cons name (cdr cell))
               cell))
           alist))
 
 (defun my-magit-generate-buffer-name (mode &optional value)
-  "Like `magit-generate-buffer-name-default-function', but name the home repo.
+  "Like `magit-generate-buffer-name-default-function', but rename some repos.
 Mirrors that function rather than advising it, because the repository
 name is baked into `magit-buffer-name-format' expansion."
-  (if (my-home-repo-toplevel-p default-directory)
+  (if-let* ((name (my-magit-repo-display-name default-directory)))
       (let ((m (substring (symbol-name mode) 0 -5))
             (v (and value (format "%s" (ensure-list value)))))
         (format-spec magit-buffer-name-format
@@ -138,7 +160,7 @@ name is baked into `magit-buffer-name-format' expansion."
                        (?M . ,(if (eq mode 'magit-status-mode) "magit" m))
                        (?v . ,(or v ""))
                        (?V . ,(if v (concat " " v) ""))
-                       (?t . ,my-home-repo-name)
+                       (?t . ,name)
                        (?x . ,(if magit-uniquify-buffer-names "" "*")))))
     (magit-generate-buffer-name-default-function mode value)))
 
@@ -278,7 +300,7 @@ dependencies rather than things worth seeing in the repo list."
   ;; Home dotfiles repo: see the section at the top of this file.
   (advice-add 'magit-process-environment :filter-return #'my-home-git-environment)
   (advice-add 'magit-list-repos :filter-return #'my-magit-list-repos-add-home)
-  (advice-add 'magit-repos-alist :filter-return #'my-magit-repos-alist-rename-home)
+  (advice-add 'magit-repos-alist :filter-return #'my-magit-repos-alist-rename)
   (setq magit-generate-buffer-name-function #'my-magit-generate-buffer-name)
   (add-hook 'magit-status-mode-hook #'my-magit-mark-home-repo)
   (add-hook 'git-commit-mode-hook 'evil-insert-state)
