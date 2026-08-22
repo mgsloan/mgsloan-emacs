@@ -338,8 +338,48 @@ dependencies rather than things worth seeing in the repo list."
 ;  "Disable `truncate-lines' in the current buffer."
 ;  (setq truncate-lines nil))
 
-(if (mgsloan-repo-list)
-    (setq initial-buffer-choice 'list-repos))
+;; Open every repository's status buffer in the background, so that entering
+;; any repo from the list is instant.  Deferred: nothing happens until Emacs
+;; has been idle for `my-open-all-repos-idle-delay' after startup, and then
+;; repositories open one per idle-timer tick so input stays responsive.
+
+(defvar my-open-all-repos-idle-delay 1
+  "Idle seconds after startup before repositories start opening.")
+
+(defvar my-open-all-repos--queue nil
+  "Repositories still waiting to be opened by `my-open-all-repositories'.")
+
+(defun my-open-all-repositories ()
+  "Create a magit-status buffer for every known repository.
+The buffers are not displayed, and repositories that already have a
+status buffer are skipped."
+  (interactive)
+  (setq my-open-all-repos--queue (magit-list-repos))
+  (my-open-all-repos--continue))
+
+(defun my-open-all-repos--continue ()
+  (if-let* ((dir (pop my-open-all-repos--queue)))
+      (progn
+        (let ((default-directory (file-name-as-directory dir)))
+          (unless (magit-get-mode-buffer 'magit-status-mode)
+            (condition-case err
+                ;; Create the buffer but leave the selected window alone.
+                (let ((magit-display-buffer-noselect t)
+                      (magit-display-buffer-function #'ignore))
+                  (magit-status-setup-buffer default-directory))
+              (error (message "my-open-all-repositories: %s: %s"
+                              dir (error-message-string err))))))
+        (run-with-idle-timer 0.1 nil #'my-open-all-repos--continue))
+    (message "Opened all repositories")))
+
+(when (mgsloan-repo-list)
+  (setq initial-buffer-choice 'list-repos)
+  ;; By `emacs-startup-hook' time the repo list from `initial-buffer-choice'
+  ;; has already been rendered, so this only ever runs after it.
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (run-with-idle-timer my-open-all-repos-idle-delay nil
+                                   #'my-open-all-repositories))))
 
 (use-package evil-collection
   :after (magit evil)
