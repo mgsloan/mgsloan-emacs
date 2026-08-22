@@ -188,9 +188,10 @@ its parent's branch; the home repo has no `.git' but is populated."
 
 ;; The repo list used to be a literal list of paths, which went stale every time
 ;; ~/proj got reorganized. Instead, generate it from the filesystem: the home
-;; repo's submodules, everything under ~/proj, and a couple of fixed entries.
+;; repo's submodules, everything under ~/proj and ~/cozy, and a couple of fixed
+;; entries.
 
-(defvar my-repo-scan-roots '("~/proj")
+(defvar my-repo-scan-roots '("~/proj" "~/cozy")
   "Directories scanned recursively for git repositories.")
 
 (defvar my-repo-extra-dirs '("~/docs" "~/.emacs.d")
