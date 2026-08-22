@@ -328,7 +328,7 @@ instead, and assume dark whenever the answer isn't a clear
   :bind* ("C-c TAB" . projectile-find-other-file)
   :bind-keymap ("C-c p" . projectile-command-map)
   :config
-  (projectile-global-mode)
+  (projectile-mode +1)
 
   (defun my-projectile-invalidate-cache (&rest _args)
     ;; We ignore the args to `magit-checkout'.
