@@ -329,7 +329,41 @@ dependencies rather than things worth seeing in the repo list."
     (advice-add 'magit-list-repos :before
                 #'my-refresh-magit-repository-directories)
     (my-refresh-magit-repository-directories))
+  (defun my-zed-executable ()
+    "Path to the zed CLI.
+`executable-find' first, since a version on `exec-path' is the one the
+user means, but fall back to the standard install location - Emacs
+started from a desktop launcher does not inherit ~/.local/bin."
+    (or (executable-find "zed")
+        (let ((f (expand-file-name "~/.local/bin/zed")))
+          (and (file-executable-p f) f))))
+  (defun my-open-in-zed (dir)
+    "Open DIR in zed."
+    (let ((zed (my-zed-executable)))
+      (unless zed
+        (user-error "No zed executable found"))
+      (start-process "zed" nil zed (expand-file-name dir))
+      (message "Opening %s in zed" (abbreviate-file-name dir))))
+  (defun magit-repolist-open-in-zed ()
+    "Open the repository at point in zed."
+    (interactive)
+    (if-let* ((id (tabulated-list-get-id)))
+        (my-open-in-zed id)
+      (user-error "There is no repository at point")))
+  (defun magit-open-in-zed ()
+    "Open the current repository in zed."
+    (interactive)
+    (if-let* ((dir (magit-toplevel)))
+        (my-open-in-zed dir)
+      (user-error "Not in a Git repository")))
   (evil-define-key 'motion magit-repolist-mode-map (kbd "g") 'tabulated-list-revert)
+  ;; Must be bound in `normal' state, not `motion': evil orders the current
+  ;; state's own keymaps - including the global `evil-normal-state-map' - ahead
+  ;; of the maps of the states it enables, so a motion-state binding for a key
+  ;; that normal state uses as a prefix (`z' for folds, `g' for goto) never
+  ;; fires.
+  (evil-define-key '(normal motion) magit-repolist-mode-map
+    (kbd "z") 'magit-repolist-open-in-zed)
   (defun magit-add-unstaged-to-misc ()
     "Run `add-unstaged-to-misc` in the current Magit repository directory."
     (interactive)
