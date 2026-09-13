@@ -379,7 +379,6 @@ started from a desktop launcher does not inherit ~/.local/bin."
     (if-let* ((dir (magit-toplevel)))
         (my-open-in-zed dir)
       (user-error "Not in a Git repository")))
-  (evil-define-key 'motion magit-repolist-mode-map (kbd "g") 'tabulated-list-revert)
   ;; Must be bound in `normal' state, not `motion': evil orders the current
   ;; state's own keymaps - including the global `evil-normal-state-map' - ahead
   ;; of the maps of the states it enables, so a motion-state binding for a key
@@ -466,7 +465,11 @@ status buffer are skipped."
   :config
   ;; Use evil keybindings for all of magit except for magit-status
   (push '("magit:.*" . emacs) evil-buffer-regexps)
-  (evil-collection-init))
+  (evil-collection-init)
+  ;; evil-collection defines `g r' for submodule lists, whose map inherits
+  ;; from this one, so replace the prefix only after it installs its bindings.
+  (evil-define-key '(normal motion) magit-repolist-mode-map
+    (kbd "g") 'tabulated-list-revert))
 
 ;; major mode for editing `git rebase -i` files
 ;; (use-package rebase-mode)
