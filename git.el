@@ -206,6 +206,9 @@ its parent's branch; the home repo has no `.git' but is populated."
 These are all build/dependency dirs, and skipping them is what keeps the
 scan cheap - an unbounded walk of ~/proj visits over 400k directories.")
 
+(defvar my-repo-scan-leaf-repos '("~/cozy/code-corpora")
+  "Repositories included without scanning for repositories inside them.")
+
 (defun my-git-repo-p (dir)
   "Whether DIR is the root of a git repository."
   (file-exists-p (expand-file-name ".git" dir)))
@@ -231,24 +234,30 @@ for the home directory repo, whose git dir is ~/.home.git."
 
 Descends past a repository to find ones nested inside it, but skips any
 nested repository listed in its parent's .gitmodules - those are vendored
-dependencies rather than things worth seeing in the repo list."
-  (let (repos)
+dependencies rather than things worth seeing in the repo list. Repositories
+in `my-repo-scan-leaf-repos' are included without scanning their contents."
+  (let ((leaf-repos (mapcar (lambda (dir)
+                              (directory-file-name (expand-file-name dir)))
+                            my-repo-scan-leaf-repos))
+        repos)
     (letrec
         ((walk
           (lambda (dir depth skip)
             (unless (member dir skip)
-              (when (my-git-repo-p dir)
-                (push dir repos)
-                (setq skip (append (my-git-submodule-paths dir) skip)))
-              (when (> depth 0)
-                (dolist (f (ignore-errors
-                             (directory-files
-                              dir t directory-files-no-dot-files-regexp t)))
-                  (when (and (file-directory-p f)
-                             (not (file-symlink-p f))
-                             (not (member (file-name-nondirectory f)
-                                          my-repo-scan-prune-names)))
-                    (funcall walk f (1- depth) skip))))))))
+              (let ((repo-p (my-git-repo-p dir)))
+                (when repo-p
+                  (push dir repos)
+                  (setq skip (append (my-git-submodule-paths dir) skip)))
+                (when (and (> depth 0)
+                           (not (and repo-p (member dir leaf-repos))))
+                  (dolist (f (ignore-errors
+                               (directory-files
+                                dir t directory-files-no-dot-files-regexp t)))
+                    (when (and (file-directory-p f)
+                               (not (file-symlink-p f))
+                               (not (member (file-name-nondirectory f)
+                                            my-repo-scan-prune-names)))
+                      (funcall walk f (1- depth) skip)))))))))
       (funcall walk (directory-file-name (expand-file-name root))
                my-repo-scan-max-depth nil))
     repos))
