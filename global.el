@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: nil; -*-
+
 (use-package diminish)
 (use-package no-littering)
 

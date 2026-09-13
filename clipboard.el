@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: nil; -*-
+
 ; Clipboard functions from https://github.com/rolandwalker/simpleclip/issues/6#issuecomment-333714700
 
 ; x-clip support for emacs-nox / emacs-nw

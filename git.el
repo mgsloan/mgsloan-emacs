@@ -1,4 +1,4 @@
-;;; Home dotfiles repo
+;;; Home dotfiles repo  -*- lexical-binding: nil; -*-
 ;;
 ;; ~/.home.git is the git dir for a repo whose work tree is $HOME, and there is
 ;; deliberately no ~/.git - a plain `git' run under $HOME must not find it (see

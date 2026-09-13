@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: nil; -*-
+
 (use-package haskell-mode
   :mode (("\\.hs\\(c\\|-boot\\)?\\'" . haskell-mode)
          ("\\.lhs\\'" . literate-haskell-mode)
