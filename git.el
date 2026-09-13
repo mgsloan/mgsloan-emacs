@@ -2,7 +2,7 @@
 ;;
 ;; ~/.home.git is the git dir for a repo whose work tree is $HOME, and there is
 ;; deliberately no ~/.git - a plain `git' run under $HOME must not find it (see
-;; ~/env/home-dir-git.md).  Setting GIT_DIR process-wide, as the old `edit_cfg'
+;; ~/env/setup/home-dir-git.md).  Setting GIT_DIR process-wide, as the old `edit_cfg'
 ;; script did, makes it findable but leaves Emacs unable to open any other repo,
 ;; and requires patching `magit-startup-asserts', which exists to prevent
 ;; exactly that.  Instead, inject the vars per git invocation, for the
@@ -182,6 +182,18 @@ its parent's branch; the home repo has no `.git' but is populated."
     (setq header-line-format
           (propertize " HOME DOTFILES REPO " 'face 'warning))))
 
+(defun my-magit-visit-home-directory (fn directory &optional other-window)
+  "Open unrecognized home-repo directories in Dired when visiting from Magit.
+Untracked directories outside env/ need not qualify for home-repo Git
+discovery.  Magit would otherwise try to open a status buffer for them.
+Nested repositories still use Magit's normal directory visiting behavior."
+  (let ((target (file-name-as-directory (expand-file-name directory))))
+    (if (and (my-home-repo-toplevel-p (magit-toplevel))
+             (string-prefix-p my-home-work-tree target)
+             (not (magit-toplevel target)))
+        (dired-jump other-window (concat target "."))
+      (funcall fn directory other-window))))
+
 (defun mgsloan-repo-list ()
   (and (string= user-login-name "mgsloan")
        (not (getenv "SUPPRESS_REPO_LIST"))))
@@ -309,6 +321,7 @@ in `my-repo-scan-leaf-repos' are included without scanning their contents."
   :config
   ;; Home dotfiles repo: see the section at the top of this file.
   (advice-add 'magit-process-environment :filter-return #'my-home-git-environment)
+  (advice-add 'magit-diff-visit-directory :around #'my-magit-visit-home-directory)
   (advice-add 'magit-list-repos :filter-return #'my-magit-list-repos-add-home)
   (advice-add 'magit-repos-alist :filter-return #'my-magit-repos-alist-rename)
   (setq magit-generate-buffer-name-function #'my-magit-generate-buffer-name)
@@ -347,8 +360,9 @@ started from a desktop launcher does not inherit ~/.local/bin."
         (let ((f (expand-file-name "~/.local/bin/zed")))
           (and (file-executable-p f) f))))
   (defun my-open-in-zed (dir)
-    "Open DIR in zed."
-    (let ((zed (my-zed-executable)))
+    "Open DIR in zed, using ~/env for the home dotfiles repo."
+    (let ((dir (if (my-home-repo-toplevel-p dir) my-home-env-dir dir))
+          (zed (my-zed-executable)))
       (unless zed
         (user-error "No zed executable found"))
       (start-process "zed" nil zed (expand-file-name dir))
