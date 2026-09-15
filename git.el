@@ -301,6 +301,9 @@ in `my-repo-scan-leaf-repos' are included without scanning their contents."
          magit-rewrite-inclusive 'ask
          ;; pop the process buffer if we're taking a while to complete
          magit-process-popup-time 10
+         ;; long-line shortcuts stay enabled after the long line disappears;
+         ;; do not warn about that sticky state
+         magit-show-long-lines-warning nil
          ;; ask me if I want a tracking upstream
          magit-set-upstream-on-push 'askifnotset
          ;; word-level diffs
@@ -318,12 +321,20 @@ in `my-repo-scan-leaf-repos' are included without scanning their contents."
   (defun magit-repolist-column-relative-date (_id)
     "timestamp relative to current time"
     (magit-git-string "log" "-1" "--format=%cr"))
+  (defun my-magit-silence-long-lines-shortcuts-message
+      (function &rest arguments)
+    "Run FUNCTION without Magit's repetitive long-line message."
+    (let ((inhibit-message t)
+          (message-log-max nil))
+      (apply function arguments)))
   :config
   ;; Home dotfiles repo: see the section at the top of this file.
   (advice-add 'magit-process-environment :filter-return #'my-home-git-environment)
   (advice-add 'magit-diff-visit-directory :around #'my-magit-visit-home-directory)
   (advice-add 'magit-list-repos :filter-return #'my-magit-list-repos-add-home)
   (advice-add 'magit-repos-alist :filter-return #'my-magit-repos-alist-rename)
+  (advice-add 'magit-section--maybe-enable-long-lines-shortcuts :around
+              #'my-magit-silence-long-lines-shortcuts-message)
   (setq magit-generate-buffer-name-function #'my-magit-generate-buffer-name)
   (add-hook 'magit-status-mode-hook #'my-magit-mark-home-repo)
   (add-hook 'git-commit-mode-hook 'evil-insert-state)
